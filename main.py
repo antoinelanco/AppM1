@@ -1,6 +1,13 @@
 import collections
 import pickle
 
+import model
+import opendata
+import numpy as np
+import torch as th
+import torch.nn as nn
+import torch.autograd as ag
+
 def unpickle(file):
     return pickle.load(open(file, 'rb'), encoding='bytes')
 
@@ -67,6 +74,47 @@ labels = open[b'labels']
 batch_label = open[b'batch_label']
 
 print(data.shape)
-a = Perceptron(labels)
-a.update(data[:10],labels[:10])
-print ("Loss rate : "str(a.score(data[:10],labels[:10])*100)+"%")
+print(type(labels), len(labels))
+batched_tensor_data = opendata.make_tensors_data(data, 50)
+batched_tensor_label = opendata.make_tensors_label(labels, 50)
+
+print(len(batched_tensor_data))
+# 1er batch
+# print(batched_tensor_data[0])
+# 1er batch, 1ere image
+# print(batched_tensor_data[0][0])
+
+#a = Perceptron(labels)
+#a.update(data[:10],labels[:10])
+#print ("Loss rate : ", str(a.score(data[:10],labels[:10])*100)+"%")
+
+model = model.MyModel(3072, 10)
+learning_rate = 1e-1
+loss_fn = nn.NLLLoss()
+
+if th.cuda.is_available():
+    model.cuda()
+    loss_fn.cuda()
+
+optimizer = th.optim.Adam(model.parameters(), lr=learning_rate)
+
+
+EPOCH = 10
+
+# Boucle d'apprentissage
+for i in range(EPOCH):    
+    model.train()
+    total_loss = 0
+
+    for x, y in zip(batched_tensor_data, batched_tensor_label):
+        model.zero_grad()
+        x = ag.Variable(x)
+        y = ag.Variable(y)
+
+        out = model(x)
+        loss = loss_fn(out, y)
+        total_loss += loss.data[0]
+        loss.backward()
+        optimizer.step()
+
+    print("Epoch %s, loss = %s" % (i, total_loss))
