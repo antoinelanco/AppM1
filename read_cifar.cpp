@@ -25,9 +25,9 @@ vector<img> read_batch(string fileName, int nb_img) {
     for (int i = 0; i < nb_img; ++i) {
     	img curr;
     	in.read(&curr.label, 1);
-    	in.read(curr.red, sizeof(curr.red) / sizeof(*curr.red));
-    	in.read(curr.green, sizeof(curr.green) / sizeof(*curr.green));
-    	in.read(curr.blue, sizeof(curr.blue) / sizeof(*curr.blue));
+    	in.read(curr.red, 1024);
+    	in.read(curr.green, 1024);
+    	in.read(curr.blue, 1024);
 
     	res.push_back(curr);
     }
