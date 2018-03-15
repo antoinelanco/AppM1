@@ -3,7 +3,7 @@
 
 __global__ void init_vec(float* vec) {
 	int tid = threadIdx.x;
-	vec[tid] = tid;
+	vec[tid] = 15.;
 }
 
 int getNbThreadPerBlock(int device) {
