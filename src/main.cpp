@@ -28,15 +28,20 @@ int main(int argc, char** argv) {
 	}
 	free(hostData);
 
-	n = 32 * 32 * 32;
-	CudaVec cuvec(n);
-	cuvec.fill(1.f);
-	hostData = cuvec.toHost();
+	n = 32 * 32;
+	CudaVec cuvec1(n);
+	cuvec1.fill(1.f);
+	hostData = cuvec1.toHost();
 	float acc = 0.f;
 	for (int i = 0; i < n; i++) {
 		acc += hostData[i];
 	}
 	cout << n << " = " << acc << endl;
 
+	CudaVec cuvec2(n);
+	cuvec2.fill(3.f);
+
+	float res = cuvec1.dot(cuvec2);
+	cout << 3 * n << " = " << res << endl;
 	return 0;
 } 

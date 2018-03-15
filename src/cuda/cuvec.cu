@@ -5,8 +5,24 @@
 
 using namespace std;
 
+__global__ void dotCuda(float* tmp, float* t1, float* t2, int size) {
+	int tid = blockIdx.x * blockDim.x + threadIdx.x;
+
+	tmp[tid] = t1[tid] * t2[tid];
+
+	__syncthreads();
+
+	int mididx = size / 2;
+
+	while (tid <= mididx && mididx != 0) {
+		tmp[tid] += tmp[tid * 2];
+		mididx /= 2;
+		__syncthreads();
+	}
+}
+
 __global__ void init_vec(float* vec, float value) {
-	int tid = blockIdx.x *blockDim.x + threadIdx.x;
+	int tid = blockIdx.x * blockDim.x + threadIdx.x;
 	vec[tid] = value;
 }
 
@@ -48,4 +64,35 @@ float* CudaVec::toHost() {
 
 int CudaVec::getSize() {
 	return this->size;
+}
+
+float CudaVec::dot(CudaVec other) {
+	if (this->size != other.size) {
+		cout << "Uncompatible size !" << endl;
+		exit(0);
+	}
+
+	float* tmp;
+	cudaMalloc(&tmp, sizeof(float) * this->size);
+
+	
+
+	int nbBlX = getNbBlockDimX(0);
+	int thrPBl = getNbThreadPerBlock(0);
+
+	if (this->size <= thrPBl) {
+		dotCuda<<<1, this->size>>>(tmp, this->cudaptr, other.cudaptr, this->size);
+	} else {
+		int neededBl = this->size / nbBlX;
+		if (neededBl <= nbBlX) {
+			dotCuda<<<neededBl, thrPBl>>>(tmp, this->cudaptr, other.cudaptr, this->size);
+		} else {
+			cout << "Unimplemented nbBlNeeded : " << neededBl << " (" << nbBlX << " available)" << endl;
+			exit(0);
+		}
+	}
+	float result;
+	cudaMemcpy(&result, tmp, sizeof(float) * 1, cudaMemcpyDeviceToHost);
+	cudaFree(tmp);
+	return result;
 }

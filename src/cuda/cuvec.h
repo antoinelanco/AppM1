@@ -11,6 +11,7 @@ public:
 	void free();
 	float* toHost();
 	int getSize();
+	float dot(CudaVec other);
 };
 
 #endif
