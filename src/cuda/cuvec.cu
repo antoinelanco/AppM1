@@ -75,8 +75,6 @@ float CudaVec::dot(CudaVec other) {
 	float* tmp;
 	cudaMalloc(&tmp, sizeof(float) * this->size);
 
-	
-
 	int nbBlX = getNbBlockDimX(0);
 	int thrPBl = getNbThreadPerBlock(0);
 
@@ -91,8 +89,11 @@ float CudaVec::dot(CudaVec other) {
 			exit(0);
 		}
 	}
+
 	float result;
+	// Le resultat est dans tmp[0]
 	cudaMemcpy(&result, tmp, sizeof(float) * 1, cudaMemcpyDeviceToHost);
 	cudaFree(tmp);
+
 	return result;
 }
