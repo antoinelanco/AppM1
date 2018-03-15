@@ -3,6 +3,7 @@
 #include "utils/res.h"
 #include "read_cifar.h"
 #include "cuda/test.h"
+#include "cuda/cuvec.h"
 
 int main(int argc, char** argv) {
 	vector<img> data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
@@ -25,5 +26,17 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < n; i++) {
 		cout << hostData[i] << endl;
 	}
+	free(hostData);
+
+	n = 32 * 32 * 32;
+	CudaVec cuvec(n);
+	cuvec.fill(1.f);
+	hostData = cuvec.toHost();
+	float acc = 0.f;
+	for (int i = 0; i < n; i++) {
+		acc += hostData[i];
+	}
+	cout << n << " = " << acc << endl;
+
 	return 0;
 } 

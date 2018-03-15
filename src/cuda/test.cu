@@ -1,16 +1,17 @@
 #include "test.h"
+#include "cudautils.h"
 
 
 __global__ void init_vec(float* vec) {
 	int tid = threadIdx.x;
-	vec[tid] = tid;
+	vec[tid] = 1.0f;
 }
 
-int getNbThreadPerBlock(int device) {
+/*int getNbThreadPerBlock(int device) {
 	int value;
 	cudaDeviceGetAttribute(&value, cudaDevAttrMaxThreadsPerBlock, device);
 	return value;
-}
+}*/
 
 float* mallocCuda(int nbElt) {
 	float* res;
