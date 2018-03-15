@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <string>
 #include <stdlib.h>
+
+#include "utils/res.h"
 
 using namespace std;
 
@@ -36,7 +37,7 @@ vector<img> read_batch(string fileName, int nb_img) {
 }
 
 int main(int argc, char** argv) {
-	vector<img> data = read_batch("./cifar-10-batches-bin/data_batch_1.bin", 10000);
+	vector<img> data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 	cout << data.size() << endl;
 	for (int i = 0; i < 32; i++) {
 		for (int j = 0; j < 32; j++) {
