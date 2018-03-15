@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 	}
 	free(hostData);
 
-	n = 32 * 32;
+	n = 32 * 32 * 32;
 	CudaVec cuvec1(n);
 	cuvec1.fill(1.f);
 	hostData = cuvec1.toHost();
@@ -41,7 +41,28 @@ int main(int argc, char** argv) {
 	CudaVec cuvec2(n);
 	cuvec2.fill(3.f);
 
+	clock_t begin = clock();
 	float res = cuvec1.dot(cuvec2);
+  	clock_t end = clock();
+  	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+  	cout << "CUDA dot for " << n << " elements : " << elapsed_secs << "s" << endl;
 	cout << 3 * n << " = " << res << endl;
+
+	float* a = (float*) malloc(sizeof(float) * n);
+	float* b = (float*) malloc(sizeof(float) * n);
+	for (int i = 0; i < n; i++) {
+		a[i] = b[i] = 1.f;
+	}
+
+	float sum = 0.f;
+	begin = clock();
+	for (int i = 0; i < n; i++) {
+		sum += a[i] * b[i];
+	}
+	end = clock();
+	elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+  	cout << "CPU dot for " << n << " elements : " << elapsed_secs << "s" << endl;
+  	cout << sum << endl;
+
 	return 0;
 } 
