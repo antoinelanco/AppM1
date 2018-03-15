@@ -33,6 +33,7 @@ void CudaVec::fill(float value) {
 		return;
 	}
 	cout << "Unimplemented nbBlNeeded : " << neededBl << " (" << nbBlX << " available)" << endl;
+	exit(0);
 }
 
 void CudaVec::free() {
