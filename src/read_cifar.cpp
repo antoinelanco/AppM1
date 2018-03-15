@@ -1,18 +1,8 @@
-#include <iostream>
 #include <fstream>
-#include <vector>
+#include <iostream>
 #include <stdlib.h>
 
-#include "utils/res.h"
-
-using namespace std;
-
-struct img {
-	char red[1024];
-	char green[1024];
-	char blue[1024];
-	char label;
-};
+#include "read_cifar.h"
 
 vector<img> read_batch(string fileName, int nb_img) {
 	vector<img> res;
@@ -35,16 +25,3 @@ vector<img> read_batch(string fileName, int nb_img) {
 
 	return res;
 }
-
-int main(int argc, char** argv) {
-	vector<img> data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
-	cout << data.size() << endl;
-	for (int i = 0; i < 32; i++) {
-		for (int j = 0; j < 32; j++) {
-			cout << (((unsigned int)data[data.size() - 1].red[i * 32 + j]) < 122u ? ". " : "# ");
-		}
-		cout << endl;
-	}
-	cout << (unsigned int) data[data.size() - 1].label << endl;
-	return 0;
-} 
