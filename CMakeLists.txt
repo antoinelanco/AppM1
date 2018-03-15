@@ -3,6 +3,20 @@ project(AppM1 C CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
-file(GLOB_RECURSE SOURCE_FILES "src/*.h" "src/*.cpp")
+find_package(CUDA REQUIRED)
 
-add_executable(AppM1 ${SOURCE_FILES})
+file(GLOB_RECURSE SRC "src/*.h" "src/*.cpp")
+
+if(CUDA_FOUND)
+    FILE(GLOB_RECURSE CUDA_SRC  "./src/cuda/*.cu")
+    list(APPEND CUDA_NVCC_FLAGS "-O3")
+    list(APPEND CUDA_NVCC_FLAGS "-Wno-deprecated-gpu-targets")
+    #list(APPEND CUDA_NVCC_FLAGS "-gencode=arch=compute_52,code=sm_52")
+    cuda_compile(cuda_objs ${CUDA_SRC})
+    SET(SRC ${SRC} ${cuda_objs})
+endif()
+
+SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O3" )
+
+add_executable(AppM1 ${SRC})
+target_link_libraries(AppM1 ${CUDA_LIBRARIES})

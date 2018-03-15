@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "read_cifar.h"
+#include "cuda/test.h"
 
 vector<img> read_batch(string fileName, int nb_img) {
 	vector<img> res;
