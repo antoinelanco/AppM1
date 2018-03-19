@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 	}
 	free(hostData);
 
-	n = 32 * 32 * 32;
+	n = 32 * 32 * 3 * 10;
 	CudaVec cuvec1(n);
 	cuvec1.fill(1.f);
 	hostData = cuvec1.toHost();

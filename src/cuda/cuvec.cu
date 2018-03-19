@@ -30,7 +30,6 @@ __global__ void reduce0(float* g_odata, float* g_idata1, float* g_idata2) {
 // https://stackoverflow.com/questions/26853363/dot-product-for-dummies-with-cuda-c
 __global__ void dotCuda3(float *a, float *b, float *c){
 	__shared__ float cache[1024];
-	//int tid = threadIdx.x + blockIdx.x*blockDim.x; 
 	int tid = blockIdx.x * (blockDim.x*2) + threadIdx.x;
 	int cacheIndex = threadIdx.x; 
 	float temp = a[tid] * b[tid] + a[tid + blockDim.x] * b[tid + blockDim.x];
@@ -44,7 +43,7 @@ __global__ void dotCuda3(float *a, float *b, float *c){
 	}
 
 	if (cacheIndex == 0){ 
-    	c[blockIdx.x] = cache[0]; 
+    	c[blockIdx.x] = cache[0];
 	}
 }
 
@@ -72,8 +71,10 @@ __global__ void init_vec(float* vec, float value) {
 
 CudaVec::CudaVec(int size) {
 	this->size = size;
-	if (this->size % 2 != 0)
+	if (this->size % 2 != 0) {
+		cout << "Must me multiple of 2 !" << endl;
 		exit(0);
+	}
 	cudaMalloc(&this->cudaptr, sizeof(float) * this->size);
 	cudaMemset(this->cudaptr, 0, sizeof(float) * this->size);
 }
@@ -115,9 +116,6 @@ float CudaVec::dot(CudaVec other) {
 		cout << "Uncompatible size !" << endl;
 		exit(0);
 	}
-	//tmp[0] = 0;
-
-	//int fake_size = (int) pow(2, ceil(log(this->size)/log(2)));
 
 	int nbBlX = getNbBlockDimX(0);
 	int thrPBl = getNbThreadPerBlock(0);
@@ -126,32 +124,18 @@ float CudaVec::dot(CudaVec other) {
 
 	float* tmp;
 	cudaMalloc(&tmp, sizeof(float) * neededBl);
-	cudaMemset(tmp, 0, sizeof(float) * neededBl);
-
-	if (this->size <= thrPBl) {
-		//dotCuda<<<1, fake_size>>>(tmp, this->cudaptr, other.cudaptr, this->size);
-		//Dev_dot<<<1, this->size>>>(this->cudaptr, other.cudaptr, tmp, this->size);
-		//reduce0<<<1, this->size>>>(tmp, this->cudaptr, other.cudaptr);
-		cout << "pas sur que ça marche ! 1 block of " << this->size << " threads" << endl;
-		dotCuda3<<<1, this->size>>>(this->cudaptr, other.cudaptr, tmp);
+	
+	if (this->size > thrPBl && neededBl <= nbBlX) {
+		//Dev_dot<<<neededBl, thrPBl>>>(this->cudaptr, other.cudaptr, tmp, this->size);
+		//dotCuda<<<neededBl, thrPBl>>>(tmp, this->cudaptr, other.cudaptr, this->size);
+		//reduce0<<<neededBl, thrPBl>>>(tmp, this->cudaptr, other.cudaptr);
+		dotCuda3<<<neededBl, thrPBl>>>(this->cudaptr, other.cudaptr, tmp);
 	} else {
-		
-		cout << "pb appel, started : " << (neededBl * thrPBl) << ", curr : " << this->size << endl;
-
-		if (neededBl <= nbBlX) {
-			//Dev_dot<<<neededBl, thrPBl>>>(this->cudaptr, other.cudaptr, tmp, this->size);
-			//dotCuda<<<neededBl, thrPBl>>>(tmp, this->cudaptr, other.cudaptr, this->size);
-			//reduce0<<<neededBl, thrPBl>>>(tmp, this->cudaptr, other.cudaptr);
-			dotCuda3<<<neededBl, thrPBl>>>(this->cudaptr, other.cudaptr, tmp);
-		} else {
-			cout << "Unimplemented nbBlNeeded : " << neededBl << " (" << nbBlX << " available)" << endl;
-			exit(0);
-		}
+		cout << "Bug" << endl;
+		exit(0);
 	}
-	cudaThreadSynchronize();
 
 	float* result = new float[neededBl];
-	// Le resultat est dans tmp[0]
 	cudaMemcpy(result, tmp, sizeof(float) * neededBl, cudaMemcpyDeviceToHost);
 	cudaFree(tmp);
 
