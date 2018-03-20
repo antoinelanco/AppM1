@@ -7,11 +7,12 @@ private:
 	int size;
 public:
 	CudaVec(int size);
+	CudaVec(float* hostData, int size);
 	void fill(float value);
 	void free();
 	float* toHost();
 	int getSize();
-	float dot(CudaVec other);
+	float* dot(CudaVec other, int subSize);
 };
 
 #endif

@@ -30,14 +30,14 @@ __global__ void reduce0(float* g_odata, float* g_idata1, float* g_idata2) {
 // https://stackoverflow.com/questions/26853363/dot-product-for-dummies-with-cuda-c
 __global__ void dotCuda3(float *a, float *b, float *c){
 	__shared__ float cache[1024];
-	int tid = blockIdx.x * (blockDim.x*2) + threadIdx.x;
+	int tid = blockIdx.x * blockDim.x + threadIdx.x;
 	int cacheIndex = threadIdx.x; 
-	float temp = a[tid] * b[tid] + a[tid + blockDim.x] * b[tid + blockDim.x];
+	float temp = a[tid] * b[tid];//+ a[tid + blockDim.x] * b[tid + blockDim.x];
 	cache[cacheIndex] = temp; 
 	__syncthreads(); 
 
 	for (unsigned int i = blockDim.x >> 1; i > 0; i >>= 1) {
-    	if(cacheIndex < i)
+    	if (cacheIndex < i)
         	cache[cacheIndex] += cache[cacheIndex + i];
         __syncthreads();      
 	}
@@ -79,6 +79,16 @@ CudaVec::CudaVec(int size) {
 	cudaMemset(this->cudaptr, 0, sizeof(float) * this->size);
 }
 
+CudaVec::CudaVec(float* hostData, int size) {
+	this->size = size;
+	if (this->size % 2 != 0) {
+		cout << "Must me multiple of 2 !" << endl;
+		exit(0);
+	}
+	cudaMalloc(&this->cudaptr, sizeof(float) * this->size);
+	cudaMemcpy(this->cudaptr, hostData, sizeof(float) * this->size, cudaMemcpyHostToDevice);
+}
+
 void CudaVec::fill(float value) {
 	int nbBlX = getNbBlockDimX(0);
 	int thrPBl = getNbThreadPerBlock(0);
@@ -111,7 +121,7 @@ int CudaVec::getSize() {
 	return this->size;
 }
 
-float CudaVec::dot(CudaVec other) {
+float* CudaVec::dot(CudaVec other, int subSize) {
 	if (this->size != other.size) {
 		cout << "Uncompatible size !" << endl;
 		exit(0);
@@ -120,7 +130,12 @@ float CudaVec::dot(CudaVec other) {
 	int nbBlX = getNbBlockDimX(0);
 	int thrPBl = getNbThreadPerBlock(0);
 
-	int neededBl = this->size / thrPBl / 2;
+	if (subSize % thrPBl != 0) {
+		cout << "Error in subSize !" << endl;
+		exit(0);
+	}
+
+	int neededBl = this->size / thrPBl;
 
 	float* tmp;
 	cudaMalloc(&tmp, sizeof(float) * neededBl);
@@ -139,12 +154,23 @@ float CudaVec::dot(CudaVec other) {
 	cudaMemcpy(result, tmp, sizeof(float) * neededBl, cudaMemcpyDeviceToHost);
 	cudaFree(tmp);
 
-	float sum = 0.f;
+	int nbRes = this->size / subSize;
+	float* sum = new float[nbRes];
+	int nb = neededBl / nbRes;
+	cout << "nbRes " << nbRes << ", nb " << nb << endl;
+	for (int i = 0; i < nbRes; i++) {
+		for(int j = 0; j < nb; j++) {
+			sum[i] += result[i * nb + j];
+		}
+	}
+	delete[] result;
+	return sum;
+	/*float sum = 0.f;
 	for (int i = 0; i < neededBl; i++) {
 		sum += result[i];
 	}
 
-	return sum;
+	return sum;*/
 	/*float result = 0.f;
 	cudaMemcpy(&result, tmp, sizeof(float) * 1, cudaMemcpyDeviceToHost);
 	cudaFree(tmp);
