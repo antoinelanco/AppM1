@@ -38,15 +38,23 @@ int main(int argc, char** argv) {
 	}
 	cout << n << " = " << acc << endl;
 
-	CudaVec cuvec2(n);
-	cuvec2.fill(3.f);
+	float* tmp = new float[n];
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 32 * 32 * 3; j++) {
+			tmp[i * 3072 + j] = 0.5f + i;
+		}
+	}
+	CudaVec cuvec2(tmp, n);
+	//cuvec2.fill(0.f);
 
 	clock_t begin = clock();
-	float res = cuvec1.dot(cuvec2);
+	float* res = cuvec1.dot(cuvec2, 32 * 32 * 3);
   	clock_t end = clock();
   	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
   	cout << "CUDA dot for " << n << " elements : " << elapsed_secs << "s" << endl;
-	cout << 3 * n << " = " << res << endl;
+  	for (int i = 0; i < 10; i++) {
+		cout << (0.5f + i) * n / 10 << " = " << res[i] << endl;
+	}
 
 	float* a = (float*) malloc(sizeof(float) * n);
 	float* b = (float*) malloc(sizeof(float) * n);
