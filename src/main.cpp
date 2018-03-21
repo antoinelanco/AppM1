@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
 	cout << "label : " << batch_data[toprint].label << endl;
 
 	Perceptron p(32*32*3, 10, 0.1);
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 30; i++) {
 		cout << "Epoch " << i << ", score : " << p.score(batch_data) << endl;
 		p.update(batch_data);
 	}
