@@ -28,15 +28,9 @@ int main(int argc, char** argv) {
 
 	Perceptron p(32*32*3, 10, 0.1);
 	for (int i = 0; i < 30; i++) {
-		cout << "Epoch " << i << ", score : " << p.score(batch_data);
+		cout << "Epoch " << i << ", ";
 		p.update(batch_data);
-		int nbErr = 0;
-		for (int i = 0; i < 1000; i++) {
-			int predict = p.predict(data_test[i]);
-			if (predict != data_test[i].label)
-				nbErr++;
-		}
-		cout << ", nbErr : " << nbErr << " / " << 1000 << endl;
+		cout << "taux d'erreur : " << p.score(data_test) << endl;
 	}
 
 	return 0;
