@@ -1,8 +1,12 @@
 #ifndef DATA_H
 #define DATA_H
 
+#include <vector>
+
+using namespace std;
+
 struct data {
-	float* features;
+	vector<float> features;
 	int label;
 };
 
