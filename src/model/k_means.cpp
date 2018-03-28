@@ -64,16 +64,25 @@ void K_means::proc(int nb_iter){
   this->assoc = assoc;
 }
 
-int K_means::predict(int num_image){
-  return this->assoc[num_image];
+int K_means::predict(data img){
+  float plusPetit = std::numeric_limits<float>::infinity();
+  int indice = 0;
+  for (int k = 0; k < this->nb_clusters; k++) {
+    float tmp = EuclidianDistance(center[k],vector<float> (img.features, img.features + 3072));
+    if (tmp<plusPetit) {
+      plusPetit = tmp;
+      indice = k;
+    }
+  }
+  return indice;
 }
 
-float K_means::loss(){
+float K_means::loss(vector<data> test_data){
   float res = 0.;
-  for (size_t i = 0; i < this -> dat.size(); i++) {
-    if (this->dat[i].label != predict(i)) {
+  for (size_t i = 0; i < test_data.size(); i++) {
+    if (test_data[i].label != predict(test_data[i])) {
       res+=1;
     }
   }
-  return res/this->dat.size();
+  return res/test_data.size();
 }

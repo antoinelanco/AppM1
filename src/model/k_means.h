@@ -18,8 +18,8 @@ public:
   void Init();
   float EuclidianDistance(vector<float> x, vector<float> y);
   void proc(int nb_iter);
-  int predict(int num_image);
-  float loss();
+  int predict(data img);
+  float loss(vector<data> test_data);
   //virtual ~K_means ();
 };
 
