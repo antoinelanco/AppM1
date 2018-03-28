@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "utils/res.h"
-#include "read_cifar.h"
-#include "utils/data.h"
+#include "data/read_cifar.h"
+#include "data/data.h"
 #include "model/perceptron.h"
 #include "model/k_means.h"
 
@@ -27,12 +27,14 @@ int main(int argc, char** argv) {
 	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
 	vector<data> data_test = transform_to_data(img_test);
 	//
-	// Perceptron p(32*32*3, 10, 0.1);
-	// for (int i = 0; i < 30; i++) {
-	// 	cout << "Epoch " << i << ", ";
-	// 	p.update(batch_data);
-	// 	cout << "taux d'erreur : " << p.score(data_test) << endl;
-	// }
+	Perceptron p(32*32*3, 10, 0.1);
+	for (int i = 0; i < 30; i++) {
+		cout << "Epoch " << i << ", ";
+		p.update(batch_data);
+		cout << "taux d'erreur : " << p.score(data_test) << endl;
+	}
+
+	cout << "K-Means :" << endl;
 
 	K_means k(10,batch_data);
 	k.proc(20);

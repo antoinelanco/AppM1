@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "utils/data.h"
+#include "data.h"
 
 using namespace std;
 

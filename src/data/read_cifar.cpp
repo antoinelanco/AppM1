@@ -31,11 +31,14 @@ vector<data> transform_to_data(vector<img_brute> v) {
 
     for (img_brute img : v) {
         data curr;
-        curr.features = new float[1024 * 3];
+        curr.features = vector<float>();
         for (int i = 0; i < 1024; i++) {
-            curr.features[i * 3 + 0] = ((float)(unsigned int) img.red[i]) / 255.f;
-						curr.features[i * 3 + 1] = ((float)(unsigned int) img.green[i]) / 255.f;
-						curr.features[i * 3 + 2] = ((float)(unsigned int) img.blue[i]) / 255.f;
+            float red = ((float)(unsigned int) img.red[i]) / 255.f;
+						float green = ((float)(unsigned int) img.green[i]) / 255.f;
+						float blue = ((float)(unsigned int) img.blue[i]) / 255.f;
+						curr.features.push_back(red);
+						curr.features.push_back(green);
+						curr.features.push_back(blue);
         }
         curr.label = img.label;
         res.push_back(curr);

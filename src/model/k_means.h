@@ -2,7 +2,7 @@
 #define K_MEANS_H
 
 #include <vector>
-#include "../utils/data.h"
+#include "../data/data.h"
 
 using namespace std;
 
