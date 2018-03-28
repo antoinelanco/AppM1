@@ -9,6 +9,13 @@ K_means::K_means(int n){
   this->nb_clusters = n;
 }
 
-float K_means::EuclidianDistance(int x1, int x2, int x3, int y1, int y2, int y3){
-  return sqrt(pow((x1-y1),2) + pow((x2-y2),2) + pow((x3-y3),2));
+float K_means::EuclidianDistance(float* x, float* y){
+
+  float res = 0;
+  // std::cout << sizeof(x)/sizeof(x[0]) << '\n';
+  for (int i = 0; i < sizeof(x)/sizeof(*x); i++) {
+    res += pow((x[i] - y[i] ),2);
+  }
+  return sqrt(res);
+
 }

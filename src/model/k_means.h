@@ -10,10 +10,10 @@ class K_means {
 private:
   vector<data> dat;
   int nb_clusters;
-  float EuclidianDistance(int x1, int x2, int x3, int y1, int y2, int y3);
 
 public:
   K_means (int n);
+  float EuclidianDistance(float* x, float* y);
   //virtual ~K_means ();
 };
 
