@@ -21,7 +21,7 @@ __global__ void reduce0(float* g_odata, float* g_idata1, float* g_idata2) {
 		__syncthreads();
 	}
 	// write result for this block to global mem
-	if (tid == 0) { 
+	if (tid == 0) {
 		g_odata[blockIdx.x] = sdata[0];
 		//atomicAdd(g_odata, sdata[0]);
 	}
@@ -31,19 +31,19 @@ __global__ void reduce0(float* g_odata, float* g_idata1, float* g_idata2) {
 __global__ void dotCuda3(float *a, float *b, float *c){
 	__shared__ float cache[1024];
 	int tid = blockIdx.x * blockDim.x + threadIdx.x;
-	int cacheIndex = threadIdx.x; 
+	int cacheIndex = threadIdx.x;
 	float temp = a[tid] * b[tid];//+ a[tid + blockDim.x] * b[tid + blockDim.x];
-	cache[cacheIndex] = temp; 
-	__syncthreads(); 
+	cache[cacheIndex] = temp;
+	__syncthreads();
 
 	for (unsigned int i = blockDim.x >> 1; i > 0; i >>= 1) {
-    	if (cacheIndex < i)
-        	cache[cacheIndex] += cache[cacheIndex + i];
-        __syncthreads();      
+		if (cacheIndex < i)
+			cache[cacheIndex] += cache[cacheIndex + i];
+		__syncthreads();
 	}
 
-	if (cacheIndex == 0){ 
-    	c[blockIdx.x] = cache[0];
+	if (cacheIndex == 0){
+		c[blockIdx.x] = cache[0];
 	}
 }
 
@@ -139,7 +139,7 @@ float* CudaVec::dot(CudaVec other, int subSize) {
 
 	float* tmp;
 	cudaMalloc(&tmp, sizeof(float) * neededBl);
-	
+
 	if (this->size > thrPBl && neededBl <= nbBlX) {
 		//Dev_dot<<<neededBl, thrPBl>>>(this->cudaptr, other.cudaptr, tmp, this->size);
 		//dotCuda<<<neededBl, thrPBl>>>(tmp, this->cudaptr, other.cudaptr, this->size);
@@ -167,12 +167,12 @@ float* CudaVec::dot(CudaVec other, int subSize) {
 	return sum;
 	/*float sum = 0.f;
 	for (int i = 0; i < neededBl; i++) {
-		sum += result[i];
-	}
+	sum += result[i];
+}
 
-	return sum;*/
-	/*float result = 0.f;
-	cudaMemcpy(&result, tmp, sizeof(float) * 1, cudaMemcpyDeviceToHost);
-	cudaFree(tmp);
-	return result;*/
+return sum;*/
+/*float result = 0.f;
+cudaMemcpy(&result, tmp, sizeof(float) * 1, cudaMemcpyDeviceToHost);
+cudaFree(tmp);
+return result;*/
 }
