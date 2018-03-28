@@ -24,8 +24,8 @@ int main(int argc, char** argv) {
 	// }
 	// cout << "label : " << batch_data[toprint].label << endl;
 
-	// vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
-	// vector<data> data_test = transform_to_data(img_test);
+	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = transform_to_data(img_test);
 	//
 	// Perceptron p(32*32*3, 10, 0.1);
 	// for (int i = 0; i < 30; i++) {
@@ -36,6 +36,6 @@ int main(int argc, char** argv) {
 
 	K_means k(10,batch_data);
 	k.proc(20);
-	std::cout << k.loss()*100 << "%" << '\n';
+	std::cout << "Error rate on test set : " << k.loss(data_test)*100 << "%" << '\n';
 	return 0;
 }
