@@ -33,13 +33,9 @@ vector<data> transform_to_data(vector<img_brute> v) {
         data curr;
         curr.features = new float[1024 * 3];
         for (int i = 0; i < 1024; i++) {
-            curr.features[i + 0] = ((float)(unsigned int) img.red[i]) / 255.f;
-        }
-        for (int i = 0; i < 1024; i++) {
-            curr.features[i + 1024] = ((float)(unsigned int) img.green[i]) / 255.f;
-        }
-        for (int i = 0; i < 1024; i++) {
-            curr.features[i + 2048] = ((float)(unsigned int) img.blue[i]) / 255.f;
+            curr.features[i * 3 + 0] = ((float)(unsigned int) img.red[i]) / 255.f;
+						curr.features[i * 3 + 1] = ((float)(unsigned int) img.green[i]) / 255.f;
+						curr.features[i * 3 + 2] = ((float)(unsigned int) img.blue[i]) / 255.f;
         }
         curr.label = img.label;
         res.push_back(curr);
