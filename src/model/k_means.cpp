@@ -59,6 +59,21 @@ void K_means::proc(int nb_iter){
   }
 
   for (size_t i = 0; i < assoc.size(); i++) {
-    std::cout << i << ":" << assoc[i] << '\n';
+    // std::cout << i << ":" << assoc[i] << '\n';
   }
+  this->assoc = assoc;
+}
+
+int K_means::predict(int num_image){
+  return this->assoc[num_image];
+}
+
+float K_means::loss(){
+  float res = 0.;
+  for (size_t i = 0; i < this -> dat.size(); i++) {
+    if (this->dat[i].label != predict(i)) {
+      res+=1;
+    }
+  }
+  return res/this->dat.size();
 }

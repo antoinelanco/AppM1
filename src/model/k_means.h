@@ -11,12 +11,15 @@ private:
   vector<data> dat;
   int nb_clusters;
   vector<vector<float> > center;
+  vector<int> assoc;
 
 public:
   K_means (int n, vector<data> dat);
   void Init();
   float EuclidianDistance(vector<float> x, vector<float> y);
   void proc(int nb_iter);
+  int predict(int num_image);
+  float loss();
   //virtual ~K_means ();
 };
 

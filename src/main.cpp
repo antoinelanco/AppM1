@@ -7,7 +7,7 @@
 #include "model/k_means.h"
 
 int main(int argc, char** argv) {
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
+	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 
 	vector<data> batch_data = transform_to_data(d);
 	// int toprint = batch_data.size() - 1;
@@ -34,7 +34,8 @@ int main(int argc, char** argv) {
 	// 	cout << "taux d'erreur : " << p.score(data_test) << endl;
 	// }
 
-	K_means k(4,batch_data);
-	k.proc(100);
+	K_means k(10,batch_data);
+	k.proc(20);
+	std::cout << k.loss()*100 << "%" << '\n';
 	return 0;
 }
