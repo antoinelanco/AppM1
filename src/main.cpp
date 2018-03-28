@@ -8,25 +8,15 @@
 int main(int argc, char** argv) {
 	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 
-	int toprint = d.size() - 1;
-	cout << d.size() << endl;
-	for (int i = 0; i < 32; i++) {
-		for (int j = 0; j < 32; j++) {
-			cout << (((unsigned int)d[toprint].red[i * 32 + j]) < 122u ? ". " : "# ");
-		}
-		cout << endl;
-	}
-	cout << "label : " << (unsigned int) d[toprint].label << endl;
-
 	vector<data> batch_data = transform_to_data(d);
-	toprint = batch_data.size() - 2;
+	int toprint = batch_data.size() - 1;
 	cout << batch_data.size() << endl;
 	for (int i = 0; i < 32; i++) {
 		for (int j = 0; j < 32; j++) {
 			float moy = 0.f;
-			moy = max(moy, batch_data[toprint].features[i * 32 + j]);
-			moy = max(moy, batch_data[toprint].features[i * 32 + j + 1024]);
-			moy = max(moy, batch_data[toprint].features[i * 32 + j + 2048]);
+			moy = max(moy, batch_data[toprint].features[(i * 32 + j) * 3]);
+			moy = max(moy, batch_data[toprint].features[(i * 32 + j) * 3 + 1]);
+			moy = max(moy, batch_data[toprint].features[(i * 32 + j) * 3 + 2]);
 			cout << ( moy < 0.5f ? ". " : "# ");
 		}
 		cout << endl;
