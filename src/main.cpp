@@ -7,7 +7,7 @@
 #include "model/k_means.h"
 
 int main(int argc, char** argv) {
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
 
 	vector<data> batch_data = transform_to_data(d);
 	// int toprint = batch_data.size() - 1;
@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	// 	cout << endl;
 	// }
 	// cout << "label : " << batch_data[toprint].label << endl;
-	//
+
 	// vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
 	// vector<data> data_test = transform_to_data(img_test);
 	//
@@ -34,9 +34,7 @@ int main(int argc, char** argv) {
 	// 	cout << "taux d'erreur : " << p.score(data_test) << endl;
 	// }
 
-	K_means k(4);
-	auto res = k.EuclidianDistance(batch_data[0].features, batch_data[1].features );
-	std::cout << "toto : " << res << '\n';
-
+	K_means k(4,batch_data);
+	k.proc(100);
 	return 0;
 }
