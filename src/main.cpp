@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	}
 	cout << "label : " << batch_data[toprint].label << endl;
 
-	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
+	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
 	vector<data> data_test = transform_to_data(img_test);
 
 	Perceptron p(32*32*3, 10, 0.1);
