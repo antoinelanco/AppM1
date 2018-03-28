@@ -33,11 +33,21 @@ int main(int argc, char** argv) {
 	}
 	cout << "label : " << batch_data[toprint].label << endl;
 
+	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
+	vector<data> data_test = transform_to_data(img_test);
+
 	Perceptron p(32*32*3, 10, 0.1);
 	for (int i = 0; i < 30; i++) {
-		cout << "Epoch " << i << ", score : " << p.score(batch_data) << endl;
+		cout << "Epoch " << i << ", score : " << p.score(batch_data);
 		p.update(batch_data);
+		int nbErr = 0;
+		for (int i = 0; i < 1000; i++) {
+			int predict = p.predict(data_test[i]);
+			if (predict != data_test[i].label)
+				nbErr++;
+		}
+		cout << ", nbErr : " << nbErr << " / " << 1000 << endl;
 	}
 
 	return 0;
-} 
+}
