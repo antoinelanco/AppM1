@@ -70,4 +70,3 @@ void Perceptron::update(vector<data> d) {
 		}
 	}
 }
-
