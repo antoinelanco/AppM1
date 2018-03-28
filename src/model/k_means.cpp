@@ -10,7 +10,7 @@ K_means::K_means(int n, vector<data> dat){
   this->dat = dat;
   for (int i = 0; i < n; i++) {
     auto r = (int)( (float) std::rand() / RAND_MAX * dat.size());
-    this->center.push_back( vector<float> (dat[r].features, dat[r].features + 3072));
+    this->center.push_back( vector<float> (dat[r].features));
 
   }
 }
@@ -33,7 +33,7 @@ void K_means::proc(int nb_iter){
       float plusPetit = std::numeric_limits<float>::infinity();
       int indice = 0;
       for (int k = 0; k < this->nb_clusters; k++) {
-        float tmp = EuclidianDistance(center[k],vector<float> (dat[j].features, dat[j].features + 3072));
+        float tmp = EuclidianDistance(center[k], dat[j].features);
         if (tmp<plusPetit) {
           plusPetit = tmp;
           indice = k;
@@ -68,7 +68,7 @@ int K_means::predict(data img){
   float plusPetit = std::numeric_limits<float>::infinity();
   int indice = 0;
   for (int k = 0; k < this->nb_clusters; k++) {
-    float tmp = EuclidianDistance(center[k],vector<float> (img.features, img.features + 3072));
+    float tmp = EuclidianDistance(center[k], img.features);
     if (tmp<plusPetit) {
       plusPetit = tmp;
       indice = k;

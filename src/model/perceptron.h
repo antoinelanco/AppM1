@@ -8,11 +8,11 @@ using namespace std;
 
 class Perceptron {
 private:
-	float** weights;
+	vector<vector<float>> weights;
 	int nbClass;
 	int inputSize;
 	float learning_rate;
-	float* th_vec(float* input);
+	float* th_vec(vector<float> input);
 public:
 	Perceptron(int inputSize, int nbClass, float lr);
 	int predict(data d);
