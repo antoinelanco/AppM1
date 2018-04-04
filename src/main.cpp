@@ -5,8 +5,9 @@
 #include "data/data.h"
 #include "model/perceptron.h"
 #include "model/k_means.h"
+#include "data/gather_data.h"
 
-int main(int argc, char** argv) {
+void approcheNaive() {
 	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 
 	vector<data> batch_data = transform_to_data(d);
@@ -39,5 +40,14 @@ int main(int argc, char** argv) {
 	K_means k(10,batch_data);
 	k.proc(20);
 	std::cout << "Error rate on test set : " << k.loss(data_test)*100 << "%" << '\n';
+}
+
+void approcheDesBoss() {
+	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	vector<data> batch_data = transform_to_data(d);
+}
+
+int main(int argc, char** argv) {
+	approcheDesBoss();
 	return 0;
 }
