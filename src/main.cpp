@@ -46,6 +46,9 @@ void approcheNaive() {
 void approcheDesBoss() {
 	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 	vector<data> batch_data = transform_to_data(d);
+
+	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = transform_to_data(img_test);
 }
 
 int main(int argc, char** argv) {
