@@ -51,19 +51,20 @@ void approcheDesBoss() {
 
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(batch_data);
-	int N = 30;
+	int N = 20;
 	cout << "Learn K-Means..." << endl;
 	pair<vector<data>, K_means > resGather = trainKMeansDataFeatures(splittedData, N, 10);
 
 	cout << "Learn Perceptron..." << endl;
 	Perceptron p(N * 4, 10, 0.1);
-	int nbEpoch = 10;
+	int nbEpoch = 1000;
 	for (int i = 0; i < nbEpoch; i++) {
-		cout << "Epoch " << i << endl;
+		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << std::flush;
 		p.update(resGather.first);
 	}
 
-	cout << "Test" << endl;
+
+	cout << "\nTest..." << endl;
 
 	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
 	vector<data> data_test = transform_to_data(img_test);

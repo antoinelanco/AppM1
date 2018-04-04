@@ -28,7 +28,6 @@ void K_means::proc(int nb_iter){
   std::vector<int> assoc;
   for (int i = 0; i < nb_iter; i++) {
     assoc.clear();
-    std::cout << ((float) i/nb_iter)*100 << "%" << '\n';
     for (int j = 0; j < this->dat.size(); j++) {
       float plusPetit = std::numeric_limits<float>::infinity();
       int indice = 0;
@@ -56,11 +55,13 @@ void K_means::proc(int nb_iter){
       }
     }
     this->center = new_centre;
+    std::cout << '\r' << ((i+1.)/nb_iter)*100 << "%" << std::flush;
   }
+  std::cout << '\n';
 
-  for (size_t i = 0; i < assoc.size(); i++) {
-    // std::cout << i << ":" << assoc[i] << '\n';
-  }
+  // for (size_t i = 0; i < assoc.size(); i++) {
+  //   // std::cout << i << ":" << assoc[i] << '\n';
+  // }
   this->assoc = assoc;
 }
 
