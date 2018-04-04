@@ -30,26 +30,26 @@ vector<data> split(vector<data> d) {
       }
     }
 
-    data curr;
-    curr.label = d[i].label;
+    data curr1;
+    data curr2;
+    data curr3;
+    data curr4;
+    curr1.label = d[i].label;
+    curr2.label = d[i].label;
+    curr3.label = d[i].label;
+    curr4.label = d[i].label;
 
-    curr.features = img1;
-    res.push_back(curr);
+    curr1.features = img1;
+    res.push_back(curr1);
 
-    curr.features = img2;
-    res.push_back(curr);
+    curr2.features = img2;
+    res.push_back(curr2);
 
-    curr.features = img3;
-    res.push_back(curr);
+    curr3.features = img3;
+    res.push_back(curr3);
 
-    curr.features = img4;
-    res.push_back(curr);
-
-
-    std::cout << img1.size() << '\n';
-    std::cout << img2.size() << '\n';
-    std::cout << img3.size() << '\n';
-    std::cout << img4.size() << '\n';
+    curr4.features = img4;
+    res.push_back(curr4);
 
   }
 

@@ -6,6 +6,7 @@
 #include "model/perceptron.h"
 #include "model/k_means.h"
 #include "data/gather_data.h"
+#include "data/splitimage.h"
 
 void printImg(data toprint) {
 	for (int i = 0; i < 32; i++) {
@@ -44,11 +45,33 @@ void approcheNaive() {
 }
 
 void approcheDesBoss() {
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	cout << "Loading Data..." <<endl;
+	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
 	vector<data> batch_data = transform_to_data(d);
+
+	cout << "Split data..." << endl;
+	vector<data> splittedData = split(batch_data);
+	int N = 30;
+	cout << "Learn K-Means..." << endl;
+	pair<vector<data>, K_means > resGather = trainKMeansDataFeatures(splittedData, N, 10);
+
+	cout << "Learn Perceptron..." << endl;
+	Perceptron p(N * 4, 10, 0.1);
+	int nbEpoch = 10;
+	for (int i = 0; i < nbEpoch; i++) {
+		cout << "Epoch " << i << endl;
+		p.update(resGather.first);
+	}
+
+	cout << "Test" << endl;
 
 	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
 	vector<data> data_test = transform_to_data(img_test);
+
+	vector<data> splittedTestImg = split(data_test);
+	vector<data> featuresData = gatherDataFeatures(resGather.second, splittedTestImg, N);
+
+	cout << "Score : " << p.score(featuresData) << endl;
 }
 
 int main(int argc, char** argv) {
