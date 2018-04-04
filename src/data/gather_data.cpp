@@ -15,16 +15,16 @@ vector<data> gatherDataFeatures(K_means k_means_patch, vector<data> splittedData
     data res;
     res.features = vector<float>();
     for (int j = 0; j < N; j++) {
-        res.features.push_back(fst_pred == i ? 1.f : 0.f);
+        res.features.push_back(fst_pred == j ? 1.f : 0.f);
     }
     for (int j = 0; j < N; j++) {
-        res.features.push_back(snd_pred == i ? 1.f : 0.f);
+        res.features.push_back(snd_pred == j ? 1.f : 0.f);
     }
     for (int j = 0; j < N; j++) {
-        res.features.push_back(thr_pred == i ? 1.f : 0.f);
+        res.features.push_back(thr_pred == j ? 1.f : 0.f);
     }
     for (int j = 0; j < N; j++) {
-        res.features.push_back(fth_pred == i ? 1.f : 0.f);
+        res.features.push_back(fth_pred == j ? 1.f : 0.f);
     }
     if (fst.label != snd.label && snd.label != thr.label && thr.label != fth.label) {
       cout << "Not same label of 4 consecutive pathes !" << endl;
