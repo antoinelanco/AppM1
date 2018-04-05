@@ -12,7 +12,6 @@ K_means::K_means(int n, vector<data> dat){
   for (int i = 0; i < n; i++) {
     auto r = (int)( (float) std::rand() / RAND_MAX * dat.size());
     this->center.push_back( vector<float> (dat[r].features));
-
   }
 }
 
@@ -66,7 +65,6 @@ void K_means::proc(int nb_iter){
   // for (size_t i = 0; i < assoc.size(); i++) {
   //   // std::cout << i << ":" << assoc[i] << '\n';
   // }
-  this->assoc = assoc;
 }
 
 int K_means::predict(data img){

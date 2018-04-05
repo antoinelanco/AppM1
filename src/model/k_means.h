@@ -12,7 +12,6 @@ private:
   int nb_clusters;
   int nbFeatures;
   vector<vector<float> > center;
-  vector<int> assoc;
 
 public:
   K_means (int n, vector<data> dat);
