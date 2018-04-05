@@ -10,7 +10,7 @@ K_means::K_means(int n, vector<data> dat){
   this->dat = dat;
   this->nbFeatures = dat[0].features.size();
   for (int i = 0; i < n; i++) {
-    auto r = (int)( (float) std::rand() / RAND_MAX * dat.size());
+    auto r = (int)( (float) rand() / RAND_MAX * dat.size());
     this->center.push_back( vector<float> (dat[r].features));
   }
 }
@@ -26,9 +26,9 @@ float K_means::EuclidianDistance(vector<float> x, vector<float> y){
 
 void K_means::proc(int nb_iter){
   for (int i = 0; i < nb_iter; i++) {
-    std::vector<int> assoc;
+    vector<int> assoc;
     for (int j = 0; j < this->dat.size(); j++) {
-      float plusPetit = std::numeric_limits<float>::infinity();
+      float plusPetit = numeric_limits<float>::infinity();
       int indice = 0;
       for (int k = 0; k < this->nb_clusters; k++) {
         float tmp = EuclidianDistance(center[k], dat[j].features);
@@ -39,10 +39,10 @@ void K_means::proc(int nb_iter){
       }
       assoc.push_back(indice);
     }
-    std::vector<int> nb_assoc (this->nb_clusters,0);
-    std::vector<std::vector<float>> new_centre;
+    vector<int> nb_assoc (this->nb_clusters,0);
+    vector<vector<float>> new_centre;
     for (int k = 0; k < this->nb_clusters; k++) {
-      new_centre.push_back(std::vector<float> (this->nbFeatures,0));
+      new_centre.push_back(vector<float> (this->nbFeatures,0));
     }
     for (size_t k = 0; k < assoc.size(); k++) {
       for (size_t j = 0; j < this->nbFeatures; j++) {
@@ -56,17 +56,13 @@ void K_means::proc(int nb_iter){
       }
     }
     this->center = new_centre;
-    std::cout << '\r' << ((i+1.)/nb_iter)*100 << "%" << std::flush;
+    cout << '\r' << ((i+1.)/nb_iter)*100 << "%" << flush;
   }
-  std::cout << '\n';
-
-  // for (size_t i = 0; i < assoc.size(); i++) {
-  //   // std::cout << i << ":" << assoc[i] << '\n';
-  // }
+  cout << '\n';
 }
 
 int K_means::predict(data img){
-  float plusPetit = std::numeric_limits<float>::infinity();
+  float plusPetit = numeric_limits<float>::infinity();
   int indice = 0;
   for (int k = 0; k < this->nb_clusters; k++) {
     float tmp = EuclidianDistance(center[k], img.features);
