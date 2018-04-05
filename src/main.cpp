@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "utils/res.h"
-#include "data/read_cifar.h"
-#include "data/read_mnist.h"
+#include "data/cifar10/read_cifar.h"
+#include "data/mnist/read_mnist.h"
 #include "data/data.h"
 #include "model/perceptron.h"
 #include "model/k_means.h"
