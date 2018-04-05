@@ -25,9 +25,8 @@ float K_means::EuclidianDistance(vector<float> x, vector<float> y){
 }
 
 void K_means::proc(int nb_iter){
-  std::vector<int> assoc;
   for (int i = 0; i < nb_iter; i++) {
-    assoc.clear();
+    std::vector<int> assoc;
     for (int j = 0; j < this->dat.size(); j++) {
       float plusPetit = std::numeric_limits<float>::infinity();
       int indice = 0;
@@ -39,16 +38,15 @@ void K_means::proc(int nb_iter){
         }
       }
       assoc.push_back(indice);
-
     }
     std::vector<int> nb_assoc (this->nb_clusters,0);
-    std::vector<std::vector<float> > new_centre;
-    for (int j = 0; j < this->nb_clusters; j++) {
+    std::vector<std::vector<float>> new_centre;
+    for (int k = 0; k < this->nb_clusters; k++) {
       new_centre.push_back(std::vector<float> (this->nbFeatures,0));
     }
     for (size_t k = 0; k < assoc.size(); k++) {
       for (size_t j = 0; j < this->nbFeatures; j++) {
-        new_centre[assoc[k]][j] += this->dat[assoc[k]].features[j];
+        new_centre[assoc[k]][j] += this->dat[k].features[j];
         nb_assoc[assoc[k]] ++;
       }
     }
