@@ -1,5 +1,6 @@
 #include "data.h"
 #include <vector>
+#include <math.h>
 #include <iostream>
 
 using namespace std;
@@ -53,5 +54,27 @@ vector<data> split(vector<data> d) {
 
   }
 
+  return res;
+}
+
+vector<data> split(vector<data> d, int nbPatch) {
+  vector<data> res;
+  int sqrtPatch = sqrt(nbPatch);
+
+  for (int i = 0; i < d.size(); i++) {
+    vector<data> tmp(nbPatch);
+    for (int j = 0; j < nbPatch; j++) {
+      tmp[j].label = d[i].label;
+    }
+    int sqrtData = sqrt(d[i].features.size() / 3);
+    for (int j = 0; j < sqrtData; j++) {
+      for (int k = 0; k < sqrtData; k++) {
+        int idx1 = j / (sqrtData / sqrtPatch);
+        int idx2 = k / (sqrtData / sqrtPatch);
+        tmp[idx1 * sqrtPatch + idx2].features.push_back(d[i].features[j * sqrtData * 3 + k * 3]);
+      }
+    }
+    res.insert(res.end(), tmp.begin(), tmp.end());
+  }
   return res;
 }

@@ -5,4 +5,5 @@
 
 using namespace std;
 vector<data> split(vector<data> d);
+vector<data> split(vector<data> d, int nbPatch);
 #endif
