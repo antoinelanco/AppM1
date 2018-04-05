@@ -8,6 +8,7 @@
 K_means::K_means(int n, vector<data> dat){
   this->nb_clusters = n;
   this->dat = dat;
+  this->nbFeatures = dat[0].features.size();
   for (int i = 0; i < n; i++) {
     auto r = (int)( (float) std::rand() / RAND_MAX * dat.size());
     this->center.push_back( vector<float> (dat[r].features));
@@ -17,7 +18,7 @@ K_means::K_means(int n, vector<data> dat){
 
 float K_means::EuclidianDistance(vector<float> x, vector<float> y){
   float res = 0;
-  for (int i = 0; i < 3072; i++) {
+  for (int i = 0; i < this->nbFeatures; i++) {
     res += pow((x[i] - y[i] ),2);
   }
   return sqrt(res);
@@ -42,16 +43,19 @@ void K_means::proc(int nb_iter){
 
     }
     std::vector<int> nb_assoc (this->nb_clusters,0);
-    std::vector<std::vector<float> > new_centre (this->nb_clusters, std::vector<float> (3072,0) );
-    for (size_t i = 0; i < assoc.size(); i++) {
-      for (size_t j = 0; j < 3072; j++) {
-        new_centre[assoc[i]][j] += this->dat[assoc[i]].features[j];
-        nb_assoc[assoc[i]] ++;
+    std::vector<std::vector<float> > new_centre;
+    for (int j = 0; j < this->nb_clusters; j++) {
+      new_centre.push_back(std::vector<float> (this->nbFeatures,0));
+    }
+    for (size_t k = 0; k < assoc.size(); k++) {
+      for (size_t j = 0; j < this->nbFeatures; j++) {
+        new_centre[assoc[k]][j] += this->dat[assoc[k]].features[j];
+        nb_assoc[assoc[k]] ++;
       }
     }
-    for (size_t i = 0; i < this->nb_clusters; i++) {
-      for (size_t j = 0; j < 3072; j++) {
-        new_centre[i][j] /= nb_assoc[i];
+    for (size_t k = 0; k < this->nb_clusters; k++) {
+      for (size_t j = 0; j < this->nbFeatures; j++) {
+        new_centre[k][j] /= nb_assoc[k];
       }
     }
     this->center = new_centre;

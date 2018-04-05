@@ -10,6 +10,7 @@ class K_means {
 private:
   vector<data> dat;
   int nb_clusters;
+  int nbFeatures;
   vector<vector<float> > center;
   vector<int> assoc;
 
