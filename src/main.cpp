@@ -49,12 +49,12 @@ void approcheDesBoss() {
 	int nbPatch = 4;
 
 	cout << "Loading Data..." <<endl;
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
+	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 100);
 	vector<data> batch_data = transform_to_data(d);
 
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(batch_data, nbPatch);
-	int N = 2048;
+	int N = 256;
 	cout << "Learn K-Means..." << endl;
 	pair<vector<data>, K_means > resGather = trainKMeansDataFeatures(splittedData, N, 100, nbPatch);
 
@@ -79,15 +79,26 @@ void approcheDesBoss() {
 
 void test() {
 	cout << "Loading Data..." <<endl;
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1);
+	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
 	vector<data> batch_data = transform_to_data(d);
 
-	int nbPatch = 16; // Must be power of 2;
-	vector<data> splittedData = split(batch_data, nbPatch);
-	cout << splittedData.size() << endl;
-	for (int i = 0; i < splittedData.size(); i++) {
-		cout << splittedData[i].features.size() << endl;
+	Perceptron p(32 * 32 * 3, 10, 0.1);
+	int nbEpoch = 10;
+	for (int i = 0; i < nbEpoch; i++) {
+		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << std::flush;
+		p.update(batch_data);
 	}
+
+	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = transform_to_data(img_test);
+
+	cout << "Score : " << p.score(data_test) << endl;
+	// int nbPatch = 16; // Must be power of 2;
+	// vector<data> splittedData = split(batch_data, nbPatch);
+	// cout << splittedData.size() << endl;
+	// for (int i = 0; i < splittedData.size(); i++) {
+	// 	cout << splittedData[i].features.size() << endl;
+	// }
 }
 
 void mnist() {
@@ -124,8 +135,8 @@ void mnist() {
 }
 
 int main(int argc, char** argv) {
-	//approcheDesBoss();
+	approcheDesBoss();
 	//test();
-	mnist();
+	//mnist();
 	return 0;
 }
