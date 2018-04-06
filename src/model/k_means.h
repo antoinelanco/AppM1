@@ -23,7 +23,18 @@ public:
   //virtual ~K_means ();
 };
 
+class K_Means_2 {
+private:
+  int nbCenters;
+  int nbFeatures;
+  vector<vector<float>> centers;
 
-
+public:
+  K_Means_2(int nbCenters, int nbFeatures);
+  K_Means_2(int nbCenters, int nbFeatures, vector<data> sample);
+  void update(vector<data> d);
+  int predict(data d);
+	float score(vector<data> d);
+};
 
 #endif

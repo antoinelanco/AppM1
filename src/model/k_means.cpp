@@ -83,3 +83,80 @@ float K_means::loss(vector<data> test_data){
   }
   return res/test_data.size();
 }
+
+/**
+  * Test - K_Means_2
+  */
+
+  K_Means_2::K_Means_2(int nbCenters, int nbFeatures) {
+    this->nbCenters = nbCenters;
+    this->nbFeatures = nbFeatures;
+    for (int i = 0; i < this->nbCenters; i++) {
+      vector<float> tmp;
+      for (int j = 0; j < this->nbFeatures; j++) {
+        float r = (float) rand() / RAND_MAX;
+        tmp.push_back(r);
+      }
+      this->centers.push_back(tmp);
+    }
+  }
+
+K_Means_2::K_Means_2(int nbCenters, int nbFeatures, vector<data> sample) {
+  this->nbCenters = nbCenters;
+  this->nbFeatures = nbFeatures;
+  for (int i = 0; i < this->nbCenters; i++) {
+    int r = sample.size() * (float) rand() / RAND_MAX;
+    this->centers.push_back(vector<float>(sample[i].features));
+  }
+}
+
+float distance(vector<float> p1, vector<float> p2) {
+  float res = 0.f;
+  for (int i = 0; i < p1.size(); i++) {
+    res += pow(p1[i] - p2[i], 2.);
+  }
+  return sqrt(res);
+}
+
+void K_Means_2::update(vector<data> d) {
+  vector<int> assoc;
+  vector<int> count(this->nbCenters, 0);
+  for (int i = 0; i < d.size(); i++) {
+    int pred = predict(d[i]);
+    assoc.push_back(pred);
+    count[pred]++;
+  }
+  vector<vector<float>> new_centers;
+  for (int k = 0; k < this->nbCenters; k++) {
+    new_centers.push_back(vector<float>(this->nbFeatures, 0.f));
+  }
+  for (int i = 0; i < d.size(); i++) {
+    int k = assoc[i];
+    for (int j = 0; j < this->nbFeatures; j++) {
+      new_centers[k][j] += d[i].features[j] / count[k];
+    }
+  }
+  this->centers = new_centers;
+}
+
+int K_Means_2::predict(data d) {
+  float min = numeric_limits<float>::max();
+  int idx = -1;
+  for (int k = 0; k < this->nbCenters; k++) {
+    float dist = distance(this->centers[k], d.features);
+    if (dist < min) {
+      idx = k;
+      min = dist;
+    }
+  }
+  return idx;
+}
+
+float K_Means_2::score(vector<data> testData) {
+  int nbErr = 0;
+  int total = testData.size();
+  for (data d : testData) {
+    nbErr += d.label != predict(d) ? 1 : 0;
+  }
+  return (float) nbErr / total;
+}
