@@ -111,9 +111,15 @@ void mnist() {
 	cout << "Score : " << p.score(testData) << endl << endl;
 
 	cout << "K-Means training..." << endl;
-	K_means k(10, trainData);
-	k.proc(10);
-	cout << "Score : " << k.loss(testData) << endl;
+	/*K_means k(10, trainData);
+	k.proc(10);*/
+	K_Means_2 k(10, 28 * 28, trainData);
+	int nbIter = 30;
+	for (int i = 0; i < nbIter; i++) {
+		k.update(trainData);
+		cout << '\r' << 100 * (int) (i + 1.) / nbIter << "%" << flush;
+	}
+	cout << endl << "Score : " << k.score(testData) << endl;
 }
 
 int main(int argc, char** argv) {
