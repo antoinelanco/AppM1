@@ -92,13 +92,16 @@ void test() {
 
 void mnist() {
 	cout << "Loading data..." << endl;
-	vector<data> trainData = read_mnist(getResFolder() + "/mnist/train-images-idx3-ubyte",
-	 getResFolder() + "/mnist/train-labels-idx1-ubyte",
-	 1000);
+	vector<data> trainData = read_mnist(
+		getResFolder() + "/mnist/train-images-idx3-ubyte",
+	 	getResFolder() + "/mnist/train-labels-idx1-ubyte",
+	 	1000);
 
-	vector<data> testData = read_mnist(getResFolder() + "/mnist/t10k-images-idx3-ubyte",
-	 getResFolder() + "/mnist/t10k-labels-idx1-ubyte",
-	 1000);
+	vector<data> testData = read_mnist(
+		getResFolder() + "/mnist/t10k-images-idx3-ubyte",
+	 	getResFolder() + "/mnist/t10k-labels-idx1-ubyte",
+	 	1000);
+
 	cout << "Perceptron training..." << endl;
 	Perceptron p(28 * 28, 10, 0.1);
  	int nbEpoch = 100;
@@ -106,15 +109,13 @@ void mnist() {
  		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << flush;
  		p.update(trainData);
  	}
-	cout << endl;
-
-	cout << "Score : " << p.score(testData) << endl << endl;
+	cout << endl << "Score : " << p.score(testData) << endl << endl;
 
 	cout << "K-Means training..." << endl;
 	/*K_means k(10, trainData);
 	k.proc(10);*/
 	K_Means_2 k(10, 28 * 28, trainData);
-	int nbIter = 30;
+	int nbIter = 3;
 	for (int i = 0; i < nbIter; i++) {
 		k.update(trainData);
 		cout << '\r' << 100 * (int) (i + 1.) / nbIter << "%" << flush;
