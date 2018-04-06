@@ -79,15 +79,26 @@ void approcheDesBoss() {
 
 void test() {
 	cout << "Loading Data..." <<endl;
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1);
-	vector<data> batch_data = transform_to_data(d);
+	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
+	vector<data> trainData = transform_to_data(d);
 
-	int nbPatch = 16; // Must be power of 2;
-	vector<data> splittedData = split(batch_data, nbPatch);
-	cout << splittedData.size() << endl;
-	for (int i = 0; i < splittedData.size(); i++) {
-		cout << splittedData[i].features.size() << endl;
+	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = transform_to_data(img_test);
+
+	for (size_t i = 0; i < 1000; i++) {
+		for (size_t j = 0; j < 28*28; j++) {
+			std::cout << trainData[i].features[j] << '\n';
+		}
 	}
+
+	cout << "Perceptron training cifar..." << endl;
+	Perceptron2 p(28 * 28, 10, 0.1);
+ 	int nbEpoch = 100;
+ 	for (int i = 0; i < nbEpoch; i++) {
+ 		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << flush;
+ 		p.update(trainData);
+ 	}
+	cout << endl << "Score : " << p.score(data_test) << endl << endl;
 }
 
 void mnist() {
@@ -102,8 +113,8 @@ void mnist() {
 	 	getResFolder() + "/mnist/t10k-labels-idx1-ubyte",
 	 	1000);
 
-	cout << "Perceptron training..." << endl;
-	Perceptron p(28 * 28, 10, 0.1);
+	cout << "Perceptron training mnist..." << endl;
+	Perceptron2 p(28 * 28, 10, 0.1);
  	int nbEpoch = 100;
  	for (int i = 0; i < nbEpoch; i++) {
  		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << flush;
@@ -111,7 +122,7 @@ void mnist() {
  	}
 	cout << endl << "Score : " << p.score(testData) << endl << endl;
 
-	cout << "K-Means training..." << endl;
+	cout << "K-Means training mnist..." << endl;
 	/*K_means k(10, trainData);
 	k.proc(10);*/
 	K_Means_2 k(10, 28 * 28, trainData);
@@ -125,7 +136,7 @@ void mnist() {
 
 int main(int argc, char** argv) {
 	//approcheDesBoss();
-	//test();
+	test();
 	mnist();
 	return 0;
 }
