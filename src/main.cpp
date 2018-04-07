@@ -24,13 +24,10 @@ void printImg(data toprint) {
 }
 
 void approcheNaive() {
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 
-	vector<data> batch_data = transform_to_data(d);
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
 
-	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
-	vector<data> data_test = transform_to_data(img_test);
-	//
 	Perceptron p(32*32*3, 10, 0.1);
 	for (int i = 0; i < 30; i++) {
 		cout << "Epoch " << i << ", ";
@@ -49,56 +46,76 @@ void approcheDesBoss() {
 	int nbPatch = 4;
 
 	cout << "Loading Data..." <<endl;
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 100);
-	vector<data> batch_data = transform_to_data(d);
+	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(batch_data, nbPatch);
-	int N = 256;
+	int N = 128;
 	cout << "Learn K-Means..." << endl;
-	pair<vector<data>, K_means > resGather = trainKMeansDataFeatures(splittedData, N, 100, nbPatch);
+	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
+	K_Means_2 k(N, 32 * 32 * 3 / nbPatch, splittedData);
+	int nbIter = 0;
+	for (int i = 0; i < nbIter; i++) {
+		k.update(splittedData);
+		cout << '\r' << 100 * (int) (i + 1.) / nbIter << "%" << flush;
+	}
+	cout << endl;
+	vector<data> newData = gatherDataFeatures(k, splittedData, N, nbPatch);
+
+	float min = 0.;
+	float max = 0.;
+	for (size_t i = 0; i < 10000; i++) {
+		for (size_t j = 0; j < N * nbPatch; j++) {
+			int tmp = newData[i].features[j];
+			if (tmp > max) max = tmp;
+			if (tmp < min) min = tmp;
+		}
+	}
+	cout << "max : " << max << ", min : " << min << endl;
 
 	cout << "Learn Perceptron..." << endl;
 	Perceptron p(N * nbPatch, 10, 0.1);
 	int nbEpoch = 100;
 	for (int i = 0; i < nbEpoch; i++) {
-		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << std::flush;
-		p.update(resGather.first);
+		cout << '\r' << 100 * (int) (i + 1.) / nbEpoch << "%" << std::flush;
+		p.update(newData);
 	}
 
 	cout << "\nTest..." << endl;
 
-	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
-	vector<data> data_test = transform_to_data(img_test);
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
 
 	vector<data> splittedTestImg = split(data_test, nbPatch);
-	vector<data> featuresData = gatherDataFeatures(resGather.second, splittedTestImg, N, nbPatch);
-
+	vector<data> featuresData = gatherDataFeatures(k, splittedTestImg, N, nbPatch);
 	cout << "Score : " << p.score(featuresData) << endl;
 }
 
 void test() {
 	cout << "Loading Data..." <<endl;
-	vector<img_brute> d = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
-	vector<data> batch_data = transform_to_data(d);
+	vector<data> trainData = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
 
-	Perceptron p(32 * 32 * 3, 10, 0.1);
-	int nbEpoch = 10;
-	for (int i = 0; i < nbEpoch; i++) {
-		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << std::flush;
-		p.update(batch_data);
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+
+	float min = 0.;
+	float max = 0.;
+	for (size_t i = 0; i < 1000; i++) {
+		for (size_t j = 0; j < 32 * 32 * 3; j++) {
+			int tmp = trainData[i].features[j];
+			if (tmp > max) max = tmp;
+			if (tmp < min) min = tmp;
+		}
 	}
+	cout << "max : " << max << ", min : " << min << endl;
 
-	vector<img_brute> img_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
-	vector<data> data_test = transform_to_data(img_test);
-
-	cout << "Score : " << p.score(data_test) << endl;
-	// int nbPatch = 16; // Must be power of 2;
-	// vector<data> splittedData = split(batch_data, nbPatch);
-	// cout << splittedData.size() << endl;
-	// for (int i = 0; i < splittedData.size(); i++) {
-	// 	cout << splittedData[i].features.size() << endl;
-	// }
+	cout << "Perceptron training cifar..." << endl;
+	Perceptron p(28 * 28, 10, 0.1);
+ 	int nbEpoch = 100;
+ 	for (int i = 0; i < nbEpoch; i++) {
+ 		p.update(trainData);
+		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << flush;
+ 	}
+	cout << endl << "Score (trainData) : " << p.score(trainData) << endl;
+	cout << "Score (testData) : " << p.score(data_test) << endl << endl;
 }
 
 void mnist() {
@@ -113,8 +130,8 @@ void mnist() {
 	 	getResFolder() + "/mnist/t10k-labels-idx1-ubyte",
 	 	1000);
 
-	cout << "Perceptron training..." << endl;
-	Perceptron p(28 * 28, 10, 0.1);
+	cout << "Perceptron training mnist..." << endl;
+	Perceptron2 p(28 * 28, 10, 0.1);
  	int nbEpoch = 100;
  	for (int i = 0; i < nbEpoch; i++) {
  		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << flush;
@@ -122,7 +139,7 @@ void mnist() {
  	}
 	cout << endl << "Score : " << p.score(testData) << endl << endl;
 
-	cout << "K-Means training..." << endl;
+	cout << "K-Means training mnist..." << endl;
 	/*K_means k(10, trainData);
 	k.proc(10);*/
 	K_Means_2 k(10, 28 * 28, trainData);

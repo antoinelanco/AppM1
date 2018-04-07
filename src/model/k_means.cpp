@@ -56,7 +56,7 @@ void K_means::proc(int nb_iter){
       }
     }
     this->center = new_centre;
-    cout << '\r' << ((i+1.)/nb_iter)*100 << "%" << flush;
+    cout << '\r' << 100 * (int) (i + 1.) / nb_iter << "%" << flush;
   }
   cout << '\n';
 }
@@ -91,6 +91,7 @@ float K_means::loss(vector<data> test_data){
   K_Means_2::K_Means_2(int nbCenters, int nbFeatures) {
     this->nbCenters = nbCenters;
     this->nbFeatures = nbFeatures;
+    this->centers = vector<vector<float>>();
     for (int i = 0; i < this->nbCenters; i++) {
       vector<float> tmp;
       for (int j = 0; j < this->nbFeatures; j++) {
@@ -104,9 +105,10 @@ float K_means::loss(vector<data> test_data){
 K_Means_2::K_Means_2(int nbCenters, int nbFeatures, vector<data> sample) {
   this->nbCenters = nbCenters;
   this->nbFeatures = nbFeatures;
+  float lastDist = 0.f;
   for (int i = 0; i < this->nbCenters; i++) {
     int r = sample.size() * (float) rand() / RAND_MAX;
-    this->centers.push_back(vector<float>(sample[i].features));
+    this->centers.push_back(vector<float>(sample[r].features));
   }
 }
 

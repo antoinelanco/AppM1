@@ -11,7 +11,7 @@ using namespace std;
 /**
  *  Retourne des data de nbPatch * N fetures déduite de k_means_patch
  */
-vector<data> gatherDataFeatures(K_means k_means_patch, vector<data> splittedData, int N, int nbPatch);
+vector<data> gatherDataFeatures(K_Means_2 k_means_patch, vector<data> splittedData, int N, int nbPatch);
 
 /**
  *  Retourne des data de nbPatch * N features et le K_means appris sur ces données

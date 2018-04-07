@@ -15,7 +15,7 @@ struct img_brute {
 	char label;
 };
 
-vector<img_brute> read_batch(string fileName, int nb_img);
+vector<data> read_batch(string fileName, int nb_img);
 
 vector<data> transform_to_data(vector<img_brute> v);
 

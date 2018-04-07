@@ -67,11 +67,11 @@ vector<data> split(vector<data> d, int nbPatch) {
       tmp[j].label = d[i].label;
     }
     int sqrtData = sqrt(d[i].features.size() / 3);
-    for (int j = 0; j < sqrtData; j++) {
-      for (int k = 0; k < sqrtData; k++) {
-        int idx1 = j / (sqrtData / sqrtPatch);
-        int idx2 = k / (sqrtData / sqrtPatch);
-        tmp[idx1 * sqrtPatch + idx2].features.push_back(d[i].features[j * sqrtData * 3 + k * 3]);
+    for (int y = 0; y < sqrtData; y++) {
+      for (int x = 0; x < sqrtData; x++) {
+        int idx1 = y / (sqrtData / sqrtPatch);
+        int idx2 = x / (sqrtData / sqrtPatch);
+        tmp[idx1 * sqrtPatch + idx2].features.push_back(d[i].features[y * sqrtData * 3 + x * 3]);
       }
     }
     res.insert(res.end(), tmp.begin(), tmp.end());
