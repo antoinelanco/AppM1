@@ -43,14 +43,14 @@ void approcheNaive() {
 }
 
 void approcheDesBoss() {
-	int nbPatch = 4;
+	int nbPatch = 16;
 
 	cout << "Loading Data..." <<endl;
 	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(batch_data, nbPatch);
-	int N = 128;
+	int N = 1024;
 	cout << "Learn K-Means..." << endl;
 	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
 	K_Means_2 k(N, 32 * 32 * 3 / nbPatch, splittedData);
