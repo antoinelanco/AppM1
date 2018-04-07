@@ -131,7 +131,7 @@ void mnist() {
 	 	1000);
 
 	cout << "Perceptron training mnist..." << endl;
-	Perceptron2 p(28 * 28, 10, 0.1);
+	Perceptron p(28 * 28, 10, 0.1);
  	int nbEpoch = 100;
  	for (int i = 0; i < nbEpoch; i++) {
  		cout << '\r' << ((i+1.)/nbEpoch)*100 << "%" << flush;
@@ -152,8 +152,8 @@ void mnist() {
 }
 
 int main(int argc, char** argv) {
-	approcheDesBoss();
-	//test();
-	//mnist();
+	//approcheDesBoss();
+	test();
+	mnist();
 	return 0;
 }

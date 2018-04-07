@@ -79,8 +79,8 @@ float* Perceptron::th_vec(vector<float> input) {
 
 void Perceptron::update(vector<data> d) {
 	for (data curr_d : d) {
-		if (this->predict(curr_d) == curr_d.label)
-		 	continue;
+		// if (this->predict(curr_d) == curr_d.label)
+		//  	continue;
 		float* g = this->th_vec(curr_d.features);
 		for (int k = 0; k < this->weights.size(); k++) {
 			float etiquette = curr_d.label == k ? 1.f : -1.f;
