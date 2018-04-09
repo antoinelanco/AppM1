@@ -135,7 +135,8 @@ void K_Means_2::update(vector<data> d) {
   for (int i = 0; i < d.size(); i++) {
     int k = assoc[i];
     for (int j = 0; j < this->nbFeatures; j++) {
-      new_centers[k][j] += d[i].features[j] / count[k];
+      float tmp = count[k] != 0 ? d[i].features[j] / count[k] : 0.f;
+      new_centers[k][j] += tmp;
     }
   }
   this->centers = new_centers;
