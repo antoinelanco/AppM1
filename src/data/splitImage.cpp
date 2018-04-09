@@ -83,10 +83,10 @@ vector<data> split(vector<data> d, int nbPatch) {
     n *= 3;
     int sqrtPatch = sqrt(nbPatch);
     for (int idx = 0; idx < d[i].features.size(); idx++) {
-      int x = idx % n;
-      int y = idx / (n / 3);
+      int x = idx % (n * 3);
+      int y = idx / (n * 3);
       //std::cout <<x<< " " <<y<< '\n';
-      int xPatch = sqrtPatch * (float) x / n;
+      int xPatch = sqrtPatch * (float) x / (n * 3);
       int yPatch = sqrtPatch * (float) y / n;
       tmp[yPatch * sqrtPatch + xPatch].features.push_back(d[i].features[idx]);
       tmp[yPatch * sqrtPatch + xPatch].label = d[i].label;
