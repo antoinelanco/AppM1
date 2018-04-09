@@ -1,11 +1,33 @@
 #include "perceptron.h"
+#include "../utils/string_utils.h"
 #include <limits>
 #include <math.h>
 #include <iostream>
 #include <tuple>
 #include <algorithm>
+#include <fstream>
+#include <iomanip>
 
-#include <vector>
+Perceptron::Perceptron(string fileName) {
+	ifstream in(fileName);
+	if (!in) {
+		cout << "Can't open file !" << endl;
+		exit(0);
+	}
+	string line;
+	this->learning_rate = 1e-5f;
+	getline(in, line);
+	this->weights = vector<vector<float>>();
+	while (getline(in, line)) {
+		vector<string> splittedLine = split(line, ' ');
+		vector<float> weight;
+		for (int i = 0; i < splittedLine.size(); i++) {
+			weight.push_back(stof(splittedLine[i]));
+		}
+		this->weights.push_back(weight);
+	}
+	in.close();
+}
 
 Perceptron::Perceptron(int inputSize, int nbClass, float lr) {
 	this->learning_rate = lr;
@@ -90,6 +112,22 @@ void Perceptron::update(vector<data> d) {
 		}
 	}
 	this->learning_rate *= 0.9;
+}
+
+void Perceptron::toFile() {
+  char name[50];
+  sprintf(name, "./res/Perceptron_%d_%d.txt", (int) this->weights.size(), (int) this->weights[0].size());
+  ofstream outFile(name);
+  outFile << this->weights.size() << " " << this->weights[0].size() << "\n";
+  if (outFile.is_open()) {
+    for (int i = 0; i < this->weights.size(); i++) {
+      for (int j = 0; j < this->weights[i].size(); j++) {
+        outFile << fixed << setprecision(8) << this->weights[i][j] << " ";
+      }
+      outFile << "\n";
+    }
+    outFile.close();
+  }
 }
 
 // ------------------------------------- 2 ----------------------------------------------------

@@ -1,7 +1,10 @@
 #include "k_means.h"
+#include "../utils/string_utils.h"
 #include <limits>
 #include <math.h>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 
 
 
@@ -87,20 +90,42 @@ float K_means::loss(vector<data> test_data){
 /**
   * Test - K_Means_2
   */
+K_Means_2::K_Means_2(string fileName) {
+  ifstream in(fileName);
+	if (!in) {
+		cout << "Can't open file !" << endl;
+		exit(0);
+	}
+	string line;
+	getline(in, line);
+  vector<string> splittedLine = split(line, ' ');
+  this->nbCenters = stoi(splittedLine[0]);
+  this->nbFeatures = stoi(splittedLine[1]);
+	this->centers = vector<vector<float>>();
+	while (getline(in, line)) {
+		splittedLine = split(line, ' ');
+		vector<float> cluster;
+		for (int i = 0; i < splittedLine.size(); i++) {
+			cluster.push_back(stof(splittedLine[i]));
+		}
+		this->centers.push_back(cluster);
+	}
+  in.close();
+}
 
-  K_Means_2::K_Means_2(int nbCenters, int nbFeatures) {
-    this->nbCenters = nbCenters;
-    this->nbFeatures = nbFeatures;
-    this->centers = vector<vector<float>>();
-    for (int i = 0; i < this->nbCenters; i++) {
-      vector<float> tmp;
-      for (int j = 0; j < this->nbFeatures; j++) {
-        float r = (float) rand() / RAND_MAX;
-        tmp.push_back(r);
-      }
-      this->centers.push_back(tmp);
+K_Means_2::K_Means_2(int nbCenters, int nbFeatures) {
+  this->nbCenters = nbCenters;
+  this->nbFeatures = nbFeatures;
+  this->centers = vector<vector<float>>();
+  for (int i = 0; i < this->nbCenters; i++) {
+    vector<float> tmp;
+    for (int j = 0; j < this->nbFeatures; j++) {
+      float r = (float) rand() / RAND_MAX;
+      tmp.push_back(r);
     }
+    this->centers.push_back(tmp);
   }
+}
 
 K_Means_2::K_Means_2(int nbCenters, int nbFeatures, vector<data> sample) {
   this->nbCenters = nbCenters;
@@ -162,4 +187,25 @@ float K_Means_2::score(vector<data> testData) {
     nbErr += d.label != predict(d) ? 1 : 0;
   }
   return (float) nbErr / total;
+}
+
+/**
+  * Première ligne :
+  * [Nombre de Centres] [Nombre de features]
+  * Après une ligne par vecteur de centre
+  */
+void K_Means_2::toFile() {
+  char name[50];
+  sprintf(name, "./res/K_Means_2_%d_%d.txt", this->nbCenters, this->nbFeatures);
+  ofstream outFile(name);
+  outFile << this->nbCenters << " " << this->nbFeatures << "\n";
+  if (outFile.is_open()) {
+    for (int i = 0; i < this->nbCenters; i++) {
+      for (int j = 0; j < this->nbFeatures; j++) {
+        outFile << fixed << setprecision(8) << this->centers[i][j] << " ";
+      }
+      outFile << "\n";
+    }
+    outFile.close();
+  }
 }

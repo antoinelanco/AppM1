@@ -2,6 +2,7 @@
 #define PERCEPTRON_H
 
 #include <vector>
+#include <string>
 #include "../data/data.h"
 
 using namespace std;
@@ -14,10 +15,12 @@ private:
 	float learning_rate;
 	float* th_vec(vector<float> input);
 public:
+	Perceptron(string fileName);
 	Perceptron(int inputSize, int nbClass, float lr);
 	int predict(data d);
 	float score(vector<data> d);
 	void update(vector<data> d);
+	void toFile();
 };
 
 class Perceptron2{

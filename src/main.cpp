@@ -75,12 +75,23 @@ void approcheDesBoss() {
 	int nbPatch = 16;
 
 	cout << "Loading Data..." <<endl;
-	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	vector<data> batch_data1 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	vector<data> batch_data2 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_2.bin", 10000);
+	vector<data> batch_data3 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_3.bin", 10000);
+	vector<data> batch_data4 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_4.bin", 10000);
+	vector<data> batch_data5 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_5.bin", 10000);
+
+	vector<data> train_data;
+	train_data.insert(train_data.end(), batch_data1.begin(), batch_data1.end());
+	train_data.insert(train_data.end(), batch_data2.begin(), batch_data2.end());
+	train_data.insert(train_data.end(), batch_data3.begin(), batch_data3.end());
+	train_data.insert(train_data.end(), batch_data4.begin(), batch_data4.end());
+	train_data.insert(train_data.end(), batch_data5.begin(), batch_data5.end());
 
 	cout << "Split data..." << endl;
-	vector<data> splittedData = split(batch_data, nbPatch);
+	vector<data> splittedData = split(train_data, nbPatch);
 	//writeSplittedImg(splittedData, nbPatch);
-	int N = 512;
+	int N = 2048;
 	cout << "Learn K-Means..." << endl;
 
 	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
@@ -90,6 +101,7 @@ void approcheDesBoss() {
 		k.update(splittedData);
 		cout << '\r' << 100 * (int) (i + 1.) / nbIter << "%" << flush;
 	}
+	k.toFile();
 	cout << endl;
 	vector<data> newData = gatherDataFeatures(k, splittedData, N, nbPatch);
 
@@ -100,13 +112,35 @@ void approcheDesBoss() {
 		cout << '\r' << 100 * (int) (i + 1.) / nbEpoch << "%" << std::flush;
 		p.update(newData);
 	}
-
+	p.toFile();
 	cout << "\nTest..." << endl;
 
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 10000);
 
 	vector<data> splittedTestImg = split(data_test, nbPatch);
 	vector<data> featuresData = gatherDataFeatures(k, splittedTestImg, N, nbPatch);
+	cout << "Score : " << p.score(featuresData) << endl;
+}
+
+void testReadFile() {
+	int nbPatch = 16;
+	int N = 1024;
+
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+
+	cout << "Read K-Means..." << endl;
+	K_Means_2 k(getResFolder() + "/K_Means_2_1024_192.txt");
+
+	cout << "Read Perceptron..." << endl;
+	Perceptron p(getResFolder() + "/Perceptron_10_16384.txt");
+
+	cout << "Split images..." << endl;
+	vector<data> splittedTestImg = split(data_test, nbPatch);
+
+	cout << "Gather images..." << endl;
+	vector<data> featuresData = gatherDataFeatures(k, splittedTestImg, N, nbPatch);
+
+	cout << "Test..." << endl;
 	cout << "Score : " << p.score(featuresData) << endl;
 }
 
@@ -172,7 +206,8 @@ void mnist() {
 }
 
 int main(int argc, char** argv) {
-	approcheDesBoss();
+	//approcheDesBoss();
+	testReadFile();
 	//test();
 	//mnist();
 	return 0;

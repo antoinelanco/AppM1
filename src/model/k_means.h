@@ -2,6 +2,7 @@
 #define K_MEANS_H
 
 #include <vector>
+#include <string>
 #include "../data/data.h"
 
 using namespace std;
@@ -30,11 +31,13 @@ private:
   vector<vector<float>> centers;
 
 public:
+  K_Means_2(string fileName);
   K_Means_2(int nbCenters, int nbFeatures);
   K_Means_2(int nbCenters, int nbFeatures, vector<data> sample);
   void update(vector<data> d);
   int predict(data d);
 	float score(vector<data> d);
+  void toFile();
 };
 
 #endif
