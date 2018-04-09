@@ -50,11 +50,12 @@ void approcheDesBoss() {
 
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(batch_data, nbPatch);
-	int N = 128;
+	int N = 1024;
 	cout << "Learn K-Means..." << endl;
+
 	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
 	K_Means_2 k(N, 32 * 32 * 3 / nbPatch, splittedData);
-	int nbIter = 10;
+	int nbIter = 20;
 	for (int i = 0; i < nbIter; i++) {
 		k.update(splittedData);
 		cout << '\r' << 100 * (int) (i + 1.) / nbIter << "%" << flush;
@@ -62,16 +63,16 @@ void approcheDesBoss() {
 	cout << endl;
 	vector<data> newData = gatherDataFeatures(k, splittedData, N, nbPatch);
 
-	float min = 0.;
-	float max = 0.;
-	for (size_t i = 0; i < 1000; i++) {
-		for (size_t j = 0; j < N * nbPatch; j++) {
-			int tmp = newData[i].features[j];
-			if (tmp > max) max = tmp;
-			if (tmp < min) min = tmp;
-		}
-	}
-	cout << "max : " << max << ", min : " << min << endl;
+	// float min = 0.;
+	// float max = 0.;
+	// for (size_t i = 0; i < 1000; i++) {
+	// 	for (size_t j = 0; j < N * nbPatch; j++) {
+	// 		int tmp = newData[i].features[j];
+	// 		if (tmp > max) max = tmp;
+	// 		if (tmp < min) min = tmp;
+	// 	}
+	// }
+	// cout << "max : " << max << ", min : " << min << endl;
 
 	cout << "Learn Perceptron..." << endl;
 	Perceptron p(N * nbPatch, 10, 0.1);
@@ -143,7 +144,7 @@ void mnist() {
 	/*K_means k(10, trainData);
 	k.proc(10);*/
 	K_Means_2 k(10, 28 * 28, trainData);
-	int nbIter = 3;
+	int nbIter = 30;
 	for (int i = 0; i < nbIter; i++) {
 		k.update(trainData);
 		cout << '\r' << 100 * (int) (i + 1.) / nbIter << "%" << flush;
