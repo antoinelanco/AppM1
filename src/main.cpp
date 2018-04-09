@@ -50,7 +50,7 @@ void approcheDesBoss() {
 
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(batch_data, nbPatch);
-	int N = 1024;
+	int N = 128;
 	cout << "Learn K-Means..." << endl;
 
 	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
@@ -75,7 +75,7 @@ void approcheDesBoss() {
 	// cout << "max : " << max << ", min : " << min << endl;
 
 	cout << "Learn Perceptron..." << endl;
-	Perceptron p(N * nbPatch, 10, 0.1);
+	Perceptron p(N * nbPatch, 10, 0.01);
 	int nbEpoch = 100;
 	for (int i = 0; i < nbEpoch; i++) {
 		cout << '\r' << 100 * (int) (i + 1.) / nbEpoch << "%" << std::flush;
