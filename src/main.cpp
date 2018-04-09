@@ -103,6 +103,8 @@ void approcheDesBoss() {
 	}
 	k.toFile();
 	cout << endl;
+	
+	cout << "Gather..." << endl;
 	vector<data> newData = gatherDataFeatures(k, splittedData, N, nbPatch);
 
 	cout << "Learn Perceptron..." << endl;
