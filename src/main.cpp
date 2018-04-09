@@ -46,15 +46,15 @@ void approcheDesBoss() {
 	int nbPatch = 16;
 
 	cout << "Loading Data..." <<endl;
-	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
 
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(batch_data, nbPatch);
-	int N = 1024;
+	int N = 128;
 	cout << "Learn K-Means..." << endl;
 	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
 	K_Means_2 k(N, 32 * 32 * 3 / nbPatch, splittedData);
-	int nbIter = 0;
+	int nbIter = 10;
 	for (int i = 0; i < nbIter; i++) {
 		k.update(splittedData);
 		cout << '\r' << 100 * (int) (i + 1.) / nbIter << "%" << flush;
@@ -64,7 +64,7 @@ void approcheDesBoss() {
 
 	float min = 0.;
 	float max = 0.;
-	for (size_t i = 0; i < 10000; i++) {
+	for (size_t i = 0; i < 1000; i++) {
 		for (size_t j = 0; j < N * nbPatch; j++) {
 			int tmp = newData[i].features[j];
 			if (tmp > max) max = tmp;
@@ -152,8 +152,8 @@ void mnist() {
 }
 
 int main(int argc, char** argv) {
-	//approcheDesBoss();
-	test();
-	mnist();
+	approcheDesBoss();
+	//test();
+	//mnist();
 	return 0;
 }
