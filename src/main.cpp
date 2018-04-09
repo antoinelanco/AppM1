@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 
 #include "utils/res.h"
 #include "data/cifar10/read_cifar.h"
@@ -42,14 +43,43 @@ void approcheNaive() {
 	std::cout << "Error rate on test set : " << k.loss(data_test)*100 << "%" << '\n';
 }
 
+void writeSplittedImg(vector<data> splittedData, int nbPatch) {
+	int n = sqrt(nbPatch);
+	int taille = 32 / n;
+	for (int k = 0; k < 16; k++) {
+		char name[40];
+		sprintf(name, "./res/image%d.ppm", k);
+		FILE *imageFile;
+	   int pixel,height = taille, width = taille;
+
+	   imageFile=fopen(name,"wb");
+	   if(imageFile==NULL){
+	      perror("ERROR: Cannot open output file");
+	      exit(EXIT_FAILURE);
+	   }
+
+	   fprintf(imageFile, "P6\n");               // P6 filetype
+	   fprintf(imageFile, "%d %d\n", width, height);   // dimensions
+	   fprintf(imageFile, "255\n");              // Max pixel
+
+	   unsigned char pix[taille * taille * 3];
+		 for (int i = 0; i < splittedData[k + 16].features.size(); i++) {
+			 pix[i] = (unsigned char) 255.f * splittedData[k + 16].features[i];
+		 }
+	   fwrite(pix, 1, taille * taille * 3, imageFile);
+	   fclose(imageFile);
+	 }
+}
+
 void approcheDesBoss() {
 	int nbPatch = 16;
 
 	cout << "Loading Data..." <<endl;
-	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
+	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 100);
 
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(batch_data, nbPatch);
+	//writeSplittedImg(splittedData, nbPatch);
 	int N = 128;
 	cout << "Learn K-Means..." << endl;
 
