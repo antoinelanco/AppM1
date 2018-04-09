@@ -93,17 +93,6 @@ void approcheDesBoss() {
 	cout << endl;
 	vector<data> newData = gatherDataFeatures(k, splittedData, N, nbPatch);
 
-	// float min = 0.;
-	// float max = 0.;
-	// for (size_t i = 0; i < 1000; i++) {
-	// 	for (size_t j = 0; j < N * nbPatch; j++) {
-	// 		int tmp = newData[i].features[j];
-	// 		if (tmp > max) max = tmp;
-	// 		if (tmp < min) min = tmp;
-	// 	}
-	// }
-	// cout << "max : " << max << ", min : " << min << endl;
-
 	cout << "Learn Perceptron..." << endl;
 	Perceptron p(N * nbPatch, 10, 0.01);
 	int nbEpoch = 100;
