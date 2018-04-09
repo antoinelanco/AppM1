@@ -8,15 +8,6 @@
 
 using namespace std;
 
-struct img_brute {
-	char red[1024];
-	char green[1024];
-	char blue[1024];
-	char label;
-};
-
 vector<data> read_batch(string fileName, int nb_img);
-
-vector<data> transform_to_data(vector<img_brute> v);
 
 #endif

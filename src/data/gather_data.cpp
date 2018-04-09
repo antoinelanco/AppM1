@@ -29,12 +29,3 @@ vector<data> gatherDataFeatures(K_Means_2 k_means_patch, vector<data> splittedDa
   }
   return dataFeatures;
 }
-
-pair<vector<data>, K_means> trainKMeansDataFeatures(vector<data> splittedData, int N, int nbIter, int nbPatch) {
-  K_means k_means(N, splittedData);
-  k_means.proc(nbIter);
-
-  vector<data> newData;// = gatherDataFeatures(k_means, splittedData, N, nbPatch);
-
-  return make_pair(newData, k_means);
-}
