@@ -58,23 +58,41 @@ vector<data> split(vector<data> d) {
 }
 
 vector<data> split(vector<data> d, int nbPatch) {
+  // vector<data> res;
+  // int sqrtPatch = sqrt(nbPatch);
+  //
+  // for (int i = 0; i < d.size(); i++) {
+  //   vector<data> tmp(nbPatch);
+  //   for (int j = 0; j < nbPatch; j++) {
+  //     tmp[j].label = d[i].label;
+  //   }
+  //   int sqrtData = sqrt(d[i].features.size());
+  //   for (int y = 0; y < sqrtData; y++) {
+  //     for (int x = 0; x < sqrtData; x++) {
+  //       int idx1 = y / (sqrtData / sqrtPatch);
+  //       int idx2 = x / (sqrtData / sqrtPatch);
+  //       tmp[idx1 * sqrtPatch + idx2].features.push_back(d[i].features[y * sqrtData + x]);
+  //     }
+  //   }
+  //   res.insert(res.end(), tmp.begin(), tmp.end());
+  // }
   vector<data> res;
-  int sqrtPatch = sqrt(nbPatch);
-
   for (int i = 0; i < d.size(); i++) {
     vector<data> tmp(nbPatch);
-    for (int j = 0; j < nbPatch; j++) {
-      tmp[j].label = d[i].label;
+    int n = sqrt(d[i].features.size() / 3);
+    n *= 3;
+    int sqrtPatch = sqrt(nbPatch);
+    for (int idx = 0; idx < d[i].features.size(); idx++) {
+      int x = idx % n;
+      int y = idx / (n / 3);
+      //std::cout <<x<< " " <<y<< '\n';
+      int xPatch = sqrtPatch * (float) x / n;
+      int yPatch = sqrtPatch * (float) y / n;
+      tmp[yPatch * sqrtPatch + xPatch].features.push_back(d[i].features[idx]);
+      tmp[yPatch * sqrtPatch + xPatch].label = d[i].label;
     }
-    int sqrtData = sqrt(d[i].features.size() / 3);
-    for (int y = 0; y < sqrtData; y++) {
-      for (int x = 0; x < sqrtData; x++) {
-        int idx1 = y / (sqrtData / sqrtPatch);
-        int idx2 = x / (sqrtData / sqrtPatch);
-        tmp[idx1 * sqrtPatch + idx2].features.push_back(d[i].features[y * sqrtData * 3 + x * 3]);
-      }
-    }
-    res.insert(res.end(), tmp.begin(), tmp.end());
+    res.insert(res.begin(), tmp.begin(), tmp.end());
+    //break;
   }
   return res;
 }
