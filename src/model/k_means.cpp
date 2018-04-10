@@ -164,7 +164,10 @@ void K_Means_2::update(vector<data> d) {
       new_centers[k][j] += tmp;
     }
   }
+  assoc.clear();
+  count.clear();
   this->centers = new_centers;
+  new_centers.clear();
 }
 
 int K_Means_2::predict(data d) {

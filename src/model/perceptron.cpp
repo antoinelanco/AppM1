@@ -67,19 +67,19 @@ float Perceptron::score(vector<data> d) {
 	float err = 0.f;
 	float total = 0.f;
 	// vector<pair<int, int>> res;
-	vector<int> count(this->weights.size(), 0);
+	// vector<int> count(this->weights.size(), 0);
 	for (data curr_d : d) {
 		// pair<int, int> a(this->predict(curr_d), curr_d.label);
 		int pred = this->predict(curr_d);
 		if (pred != curr_d.label)
 			err++;
-		count[pred]++;
+		// count[pred]++;
 		total++;
 		// res.push_back(a);
 	}
-	for (int i = 0; i < this->weights.size(); i++) {
-		cout << i << " : " << count[i] << endl;
-	}
+	// for (int i = 0; i < this->weights.size(); i++) {
+	// 	cout << i << " : " << count[i] << endl;
+	// }
 	// sort(res.begin(), res.end(), pairCompare);
 	// for (int i = 0; i < res.size(); i++) {
 	// 	cout << res[i].first << " " << res[i].second << endl;
@@ -110,6 +110,7 @@ void Perceptron::update(vector<data> d) {
 				this->weights[k][j] += -this->learning_rate * (g[k] - etiquette) * curr_d.features[j];
 			}
 		}
+		delete g;
 	}
 	this->learning_rate *= 0.9;
 }
