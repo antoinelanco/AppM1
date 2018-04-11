@@ -1,10 +1,13 @@
 #include "k_means.h"
 #include "../utils/string_utils.h"
+#include "../utils/res.h"
+#include "../utils/images.h"
 #include <limits>
 #include <math.h>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <sys/stat.h>
 
 
 
@@ -210,5 +213,14 @@ void K_Means_2::toFile() {
       outFile << "\n";
     }
     outFile.close();
+  }
+}
+
+void K_Means_2::makeImageCenters() {
+  for (int i = 0; i < this->nbCenters; i++) {
+      char name[40];
+      sprintf(name, "K_Means_%d_%d_features_%d.ppm", this->nbCenters, this->nbFeatures, i);
+      int taille = (int) sqrt(this->centers[i].size() / 3.f);
+      writeImg(name, this->centers[i], taille, taille);
   }
 }

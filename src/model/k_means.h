@@ -38,6 +38,7 @@ public:
   int predict(data d);
 	float score(vector<data> d);
   void toFile();
+  void makeImageCenters();
 };
 
 #endif
