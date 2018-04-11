@@ -72,10 +72,10 @@ void writeSplittedImg(vector<data> splittedData, int nbPatch) {
 }
 
 void approcheDesBoss() {
-	int nbPatch = 16;
+	int nbPatch = 9;
 
 	cout << "Loading Data..." <<endl;
-	vector<data> batch_data1 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 2000);
+	vector<data> batch_data1 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 	// vector<data> batch_data2 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_2.bin", 10000);
 	// vector<data> batch_data3 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_3.bin", 10000);
 	// vector<data> batch_data4 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_4.bin", 10000);
@@ -91,7 +91,7 @@ void approcheDesBoss() {
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(train_data, nbPatch);
 	//writeSplittedImg(splittedData, nbPatch);
-	int N = 512;
+	int N = 256;
 	cout << "Learn K-Means..." << endl;
 
 	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
@@ -109,7 +109,7 @@ void approcheDesBoss() {
 
 	cout << "Learn Perceptron..." << endl;
 	Perceptron p(N * nbPatch, 10, 0.01);
-	int nbEpoch = 100;
+	int nbEpoch = 20;
 	for (int i = 0; i < nbEpoch; i++) {
 		cout << '\r' << 100 * (int) (i + 1.) / nbEpoch << "%" << std::flush;
 		p.update(newData);
@@ -128,27 +128,13 @@ void testReadFile() {
 	int nbPatch = 16;
 	int N = 2048;
 	cout << "Loading data..." << endl;
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
-	vector<data> train_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 2000);
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 10000);
 
 	cout << "Read K-Means..." << endl;
-	K_Means_2 k(getResFolder() + "/K_Means_2_2048_192.txt");
+	K_Means_2 k(getResFolder() + "/16_patchs_2048_clusters_20iterKmean&Perceptron/K_Means_2_2048_192.txt");
 
-	cout << "Split and Gather train images..." << endl;
-	vector<data> splittedData = split(train_data, nbPatch);
-	vector<data> new_data = gatherDataFeatures(k, splittedData, N, nbPatch);
-
-	cout << "Learn Perceptron..." << endl;
-	Perceptron p(N * nbPatch, 10, 0.01);
-	int nbEpoch = 100;
-	for (int i = 0; i < nbEpoch; i++) {
-		cout << '\r' << 100 * (int) (i + 1.) / nbEpoch << "%" << flush;
-		p.update(new_data);
-	}
-	p.toFile();
-
-	// cout << "Read Perceptron..." << endl;
-	// Perceptron p(getResFolder() + "/Perceptron_10_16384.txt");
+	cout << "Read Perceptron..." << endl;
+	Perceptron p(getResFolder() + "/16_patchs_2048_clusters_20iterKmean&Perceptron/Perceptron_10_32768.txt");
 
 	cout << "Split images..." << endl;
 	vector<data> splittedTestImg = split(data_test, nbPatch);
