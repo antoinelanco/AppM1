@@ -72,7 +72,7 @@ void writeSplittedImg(vector<data> splittedData, int nbPatch) {
 }
 
 void approcheDesBoss() {
-	int nbPatch = 9;
+	int nbPatch = 4;
 
 	cout << "Loading Data..." <<endl;
 	vector<data> batch_data1 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
@@ -128,13 +128,13 @@ void testReadFile() {
 	int nbPatch = 16;
 	int N = 2048;
 	cout << "Loading data..." << endl;
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 10000);
 
 	cout << "Read K-Means..." << endl;
-	K_Means_2 k(getResFolder() + "/K_Means_2_2048_192.txt");
+	K_Means_2 k(getResFolder() + "/16_patchs_2048_clusters_20iterKmean&Perceptron/K_Means_2_2048_192.txt");
 
 	cout << "Read Perceptron..." << endl;
-	Perceptron p(getResFolder() + "/Perceptron_10_32768.txt");
+	Perceptron p(getResFolder() + "/16_patchs_2048_clusters_20iterKmean&Perceptron/Perceptron_10_32768.txt");
 
 	cout << "Split images..." << endl;
 	vector<data> splittedTestImg = split(data_test, nbPatch);
@@ -145,6 +145,13 @@ void testReadFile() {
 	cout << "Test..." << endl;
 	cout << "Score : " << p.score(featuresData) << endl;
 	p.scoreFile(featuresData);
+}
+
+void printKMeansCenters() {
+	cout << "Read K-Means..." << endl;
+	K_Means_2 k(getResFolder() + "/K_Means_2_256_768.txt");
+	cout << "Writing images..." << endl;
+	k.makeImageCenters();
 }
 
 void test() {
@@ -210,7 +217,8 @@ void mnist() {
 
 int main(int argc, char** argv) {
 	//approcheDesBoss();
-	testReadFile();
+	//testReadFile();
+	printKMeansCenters();
 	//test();
 	//mnist();
 	return 0;
