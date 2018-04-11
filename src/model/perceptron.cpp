@@ -87,6 +87,38 @@ float Perceptron::score(vector<data> d) {
 	return err / total;
 }
 
+void Perceptron::scoreFile(vector<data> d){
+
+	float err = 0.f;
+	float total = 0.f;
+
+	vector<int> v(2, 0);
+	vector<vector<int> > res(this->weights.size(), v);
+
+	for (data curr_d : d) {
+		res[curr_d.label][0]++;
+		int pred = this->predict(curr_d);
+		if (pred != curr_d.label){
+			res[curr_d.label][1]++;
+			err++;
+		}
+		total++;
+	}
+	float taux = err / total;
+
+	char name[50];
+	sprintf(name, "./res/Perceptron_%d_%d_score.txt", (int) this->weights.size(), (int) this->weights[0].size());
+	ofstream outFile(name);
+	outFile << this->weights.size() << " " << this->weights[0].size() << "\n";
+	if (outFile.is_open()) {
+		for (int i = 0; i < this->weights.size(); i++) {
+			outFile << "Class "<< i << ": Mauvaise rep -> " << res[i][1] << " Bonne rep -> " << res[i][0]-res[i][1] << " Toto -> " << res[i][0] << endl;
+		}
+		outFile << "Score : " << taux << "%" << endl;
+		outFile.close();
+	}
+}
+
 float* Perceptron::th_vec(vector<float> input) {
 	float* res = new float[input.size()];
 	for (int k = 0; k < this->weights.size(); k++) {

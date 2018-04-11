@@ -19,6 +19,7 @@ public:
 	Perceptron(int inputSize, int nbClass, float lr);
 	int predict(data d);
 	float score(vector<data> d);
+	void scoreFile(vector<data> d);
 	void update(vector<data> d);
 	void toFile();
 };

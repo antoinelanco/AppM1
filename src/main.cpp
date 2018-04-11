@@ -128,13 +128,13 @@ void testReadFile() {
 	int nbPatch = 16;
 	int N = 2048;
 	cout << "Loading data..." << endl;
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 10000);
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
 
 	cout << "Read K-Means..." << endl;
-	K_Means_2 k(getResFolder() + "/16_patchs_2048_clusters_20iterKmean&Perceptron/K_Means_2_2048_192.txt");
+	K_Means_2 k(getResFolder() + "/K_Means_2_2048_192.txt");
 
 	cout << "Read Perceptron..." << endl;
-	Perceptron p(getResFolder() + "/16_patchs_2048_clusters_20iterKmean&Perceptron/Perceptron_10_32768.txt");
+	Perceptron p(getResFolder() + "/Perceptron_10_32768.txt");
 
 	cout << "Split images..." << endl;
 	vector<data> splittedTestImg = split(data_test, nbPatch);
@@ -144,6 +144,7 @@ void testReadFile() {
 
 	cout << "Test..." << endl;
 	cout << "Score : " << p.score(featuresData) << endl;
+	p.scoreFile(featuresData);
 }
 
 void test() {
