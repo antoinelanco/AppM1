@@ -33,6 +33,9 @@ vector<data> read_batch(string fileName, int nb_img) {
 					curr.features.push_back(g);
 					curr.features.push_back(b);
 			}
+			delete red;
+			delete green;
+			delete blue;
 			curr.label = label;
 			res.push_back(curr);
     }
