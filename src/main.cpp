@@ -98,7 +98,7 @@ void approcheDesBoss() {
 	Perceptron p(N * nbPatch, 10, 0.01);
 	int nbEpoch = 20;
 	for (int i = 0; i < nbEpoch; i++) {
-		cout << '\r' << 100 * (int) (i + 1.) / nbEpoch << "%" << std::flush;
+		cout << '\r' << 100 * (int) (i + 1.) / nbEpoch << "%" << flush;
 		p.update(newData);
 	}
 	p.toFile();
