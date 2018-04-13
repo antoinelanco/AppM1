@@ -36,6 +36,7 @@ public:
   K_Means_2(int nbCenters, int nbFeatures, vector<data> sample);
   void update(vector<data> d);
   int predict(data d);
+  vector<float> predictVec(data d);
 	float score(vector<data> d);
   void toFile();
   void makeImageCenters();

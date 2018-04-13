@@ -49,12 +49,12 @@ void approcheNaive() {
 }
 
 void approcheDesBoss() {
-	int nbPatch = 4;
+	int nbPatch = 16;
 
 	cout << "Loading Data..." << endl;
 	vector<data> batch_data1 = read_batch(
 		getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin",
-		10000);
+		3000);
 	// vector<data> batch_data2 = read_batch(
 	// 	getResFolder() + "/cifar-10-batches-bin/data_batch_2.bin",
 	// 	10000);
@@ -92,7 +92,7 @@ void approcheDesBoss() {
 	cout << endl;
 
 	cout << "Gather..." << endl;
-	vector<data> newData = gatherDataFeatures(k, splittedData, N, nbPatch);
+	vector<data> newData = gatherDataFeaturesVec(k, splittedData, N, nbPatch);
 
 	cout << "Learn Perceptron..." << endl;
 	Perceptron p(N * nbPatch, 10, 0.01);
@@ -225,8 +225,8 @@ void printImages() {
 }
 
 int main(int argc, char** argv) {
-	//approcheDesBoss();
-	testReadFile();
+	approcheDesBoss();
+	//testReadFile();
 	//printKMeansCenters();
 	//test();
 	//mnist();

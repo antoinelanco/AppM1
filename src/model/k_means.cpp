@@ -186,6 +186,16 @@ int K_Means_2::predict(data d) {
   return idx;
 }
 
+vector<float> K_Means_2::predictVec(data d) {
+  vector<float> res;
+  for (int k = 0; k < this->nbCenters; k++) {
+    res.push_back(1.f/distance(this->centers[k], d.features));
+  }
+  return res;
+}
+
+
+
 float K_Means_2::score(vector<data> testData) {
   int nbErr = 0;
   int total = testData.size();
