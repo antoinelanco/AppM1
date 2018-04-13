@@ -6,7 +6,7 @@
 
 void writeImg(string fileName, vector<float> normalizedRGBArray, int width, int height) {
   char* pathToFeaturesImg = new char[2000]();
-  string name = getResFolder() + "/features_k_means/";
+  string name = getResFolder() + "/images/";
   sprintf(pathToFeaturesImg, "%s", name.c_str());
   struct stat info;
   if (stat( pathToFeaturesImg, &info ) != 0)
