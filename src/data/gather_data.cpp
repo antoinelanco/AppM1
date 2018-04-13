@@ -19,8 +19,10 @@ vector<data> gatherDataFeatures(K_Means_2 k_means_patch, vector<data> splittedDa
       int pred = k_means_patch.predict(curr);
       count[pred]++;
       res.features[j * N + pred] = 1.f;
+      cout << "\r" << 100 * (int) (i + j + 1.f) / splittedData.size() << "%" << flush;
     }
     dataFeatures.push_back(res);
   }
+  cout << endl;
   return dataFeatures;
 }

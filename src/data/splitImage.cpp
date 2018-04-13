@@ -74,6 +74,8 @@ vector<data> split(vector<data> d, int nbPatch) {
       tmp[yPatch * sqrtPatch + xPatch].label = d[i].label;
     }
     res.insert(res.begin(), tmp.begin(), tmp.end());
+    cout << "\r" << 100 * (int) (i + 1.f) / d.size() << "%" << flush;
   }
+  cout << endl;
   return res;
 }
