@@ -9,6 +9,7 @@
 #include "model/k_means.h"
 #include "data/gather_data.h"
 #include "data/splitimage.h"
+#include "utils/images.h"
 
 void printImg(data toprint) {
 	for (int i = 0; i < 32; i++) {
@@ -215,11 +216,22 @@ void mnist() {
 	cout << endl << "Score : " << k.score(testData) << endl;
 }
 
+void img(){
+	vector<data> trainData = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	for (int i = 0; i < trainData.size(); i++) {
+		if (!(trainData[i].label==3)) continue;
+		char name[100];
+		sprintf(name,"class_%d_num_%d.ppm", trainData[i].label, i );
+		writeImg(name, trainData[i].features,32,32);
+	}
+}
+
 int main(int argc, char** argv) {
 	//approcheDesBoss();
 	//testReadFile();
-	printKMeansCenters();
+	//printKMeansCenters();
 	//test();
 	//mnist();
+	img();
 	return 0;
 }
