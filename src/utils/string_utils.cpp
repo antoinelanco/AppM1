@@ -5,13 +5,13 @@
 #include "string_utils.h"
 #include <sstream>
 
-std::vector<std::string> split(const std::string &s, char delim) {
-    std::stringstream ss(s);
-    std::string item;
-    std::vector<std::string> elems;
-    while (std::getline(ss, item, delim)) {
+vector<string> split(const string &s, char delim) {
+    stringstream ss(s);
+    string item;
+    vector<string> elems;
+    while (getline(ss, item, delim)) {
         //elems.push_back(item);
-        elems.push_back(std::move(item)); // if C++11 (based on comment from @mchiasson)
+        elems.push_back(move(item)); // if C++11 (based on comment from @mchiasson)
     }
     return elems;
 }

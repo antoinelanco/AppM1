@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string> split(const std::string &s, char delim);
+using namespace std;
+
+vector<string> split(const string &s, char delim);
 
 #endif //MEDIEFIGHT_STRING_UTILS_H
