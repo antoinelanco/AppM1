@@ -9,6 +9,7 @@
 #include "model/k_means.h"
 #include "data/gather_data.h"
 #include "data/splitimage.h"
+#include "utils/images.h"
 
 void printImg(data toprint) {
 	for (int i = 0; i < 32; i++) {
@@ -43,38 +44,10 @@ void approcheNaive() {
 	std::cout << "Error rate on test set : " << k.loss(data_test)*100 << "%" << '\n';
 }
 
-void writeSplittedImg(vector<data> splittedData, int nbPatch) {
-	int n = sqrt(nbPatch);
-	int taille = 32 / n;
-	for (int k = 0; k < 16; k++) {
-		char name[40];
-		sprintf(name, "./res/image%d.ppm", k);
-		FILE *imageFile;
-	  int pixel,height = taille, width = taille;
-
-	  imageFile=fopen(name,"wb");
-	  if(imageFile==NULL){
-	  	perror("ERROR: Cannot open output file");
-	    exit(EXIT_FAILURE);
-	  }
-
-	  fprintf(imageFile, "P6\n");               // P6 filetype
-	  fprintf(imageFile, "%d %d\n", width, height);   // dimensions
-	  fprintf(imageFile, "255\n");              // Max pixel
-
-	  unsigned char pix[taille * taille * 3];
-		for (int i = 0; i < splittedData[k + 16].features.size(); i++) {
-			pix[i] = (unsigned char) 255.f * splittedData[k + 16].features[i];
-		}
-	  fwrite(pix, 1, taille * taille * 3, imageFile);
-	  fclose(imageFile);
-	}
-}
-
 void approcheDesBoss() {
 	int nbPatch = 4;
 
-	cout << "Loading Data..." <<endl;
+	cout << "Loading Data..." << endl;
 	vector<data> batch_data1 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
 	// vector<data> batch_data2 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_2.bin", 10000);
 	// vector<data> batch_data3 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_3.bin", 10000);
@@ -91,7 +64,7 @@ void approcheDesBoss() {
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(train_data, nbPatch);
 	//writeSplittedImg(splittedData, nbPatch);
-	int N = 256;
+	int N = 128;
 	cout << "Learn K-Means..." << endl;
 
 	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
@@ -126,15 +99,15 @@ void approcheDesBoss() {
 
 void testReadFile() {
 	int nbPatch = 16;
-	int N = 2048;
+	int N = 1024;
 	cout << "Loading data..." << endl;
 	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 10000);
 
 	cout << "Read K-Means..." << endl;
-	K_Means_2 k(getResFolder() + "/16_patchs_2048_clusters_20iterKmean&Perceptron/K_Means_2_2048_192.txt");
+	K_Means_2 k(getResFolder() + "/16_1024_50000/K_Means_2_1024_192.txt");
 
 	cout << "Read Perceptron..." << endl;
-	Perceptron p(getResFolder() + "/16_patchs_2048_clusters_20iterKmean&Perceptron/Perceptron_10_32768.txt");
+	Perceptron p(getResFolder() + "/16_1024_50000/Perceptron_10_16384.txt");
 
 	cout << "Split images..." << endl;
 	vector<data> splittedTestImg = split(data_test, nbPatch);
@@ -172,7 +145,7 @@ void test() {
 	cout << "max : " << max << ", min : " << min << endl;
 
 	cout << "Perceptron training cifar..." << endl;
-	Perceptron p(28 * 28, 10, 0.1);
+	Perceptron p(32 * 32 * 3, 10, 0.1);
  	int nbEpoch = 100;
  	for (int i = 0; i < nbEpoch; i++) {
  		p.update(trainData);
@@ -180,6 +153,7 @@ void test() {
  	}
 	cout << endl << "Score (trainData) : " << p.score(trainData) << endl;
 	cout << "Score (testData) : " << p.score(data_test) << endl << endl;
+	p.scoreFile(data_test);
 }
 
 void mnist() {
@@ -215,11 +189,23 @@ void mnist() {
 	cout << endl << "Score : " << k.score(testData) << endl;
 }
 
+void printImages() {
+	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	for (int i = 0; i < 20; i++) {
+		if (data_test[i].label == 3) {
+			char name[50];
+			sprintf(name, "image_%d_%d.ppm", data_test[i].label, i);
+			writeImg(name, data_test[i].features, 32, 32);
+		}
+	}
+}
+
 int main(int argc, char** argv) {
 	//approcheDesBoss();
-	//testReadFile();
-	printKMeansCenters();
+	testReadFile();
+	//printKMeansCenters();
 	//test();
 	//mnist();
+	//printImages();
 	return 0;
 }
