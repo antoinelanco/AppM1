@@ -26,9 +26,13 @@ void printImg(data toprint) {
 }
 
 void approcheNaive() {
-	vector<data> batch_data = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
+	vector<data> batch_data = read_batch(
+		getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin",
+		10000);
 
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = read_batch(
+		getResFolder() + "/cifar-10-batches-bin/test_batch.bin",
+		1000);
 
 	Perceptron p(32*32*3, 10, 0.1);
 	for (int i = 0; i < 30; i++) {
@@ -48,11 +52,21 @@ void approcheDesBoss() {
 	int nbPatch = 4;
 
 	cout << "Loading Data..." << endl;
-	vector<data> batch_data1 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 10000);
-	// vector<data> batch_data2 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_2.bin", 10000);
-	// vector<data> batch_data3 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_3.bin", 10000);
-	// vector<data> batch_data4 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_4.bin", 10000);
-	// vector<data> batch_data5 = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_5.bin", 10000);
+	vector<data> batch_data1 = read_batch(
+		getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin",
+		10000);
+	// vector<data> batch_data2 = read_batch(
+	// 	getResFolder() + "/cifar-10-batches-bin/data_batch_2.bin",
+	// 	10000);
+	// vector<data> batch_data3 = read_batch(
+	// 	getResFolder() + "/cifar-10-batches-bin/data_batch_3.bin",
+	// 	10000);
+	// vector<data> batch_data4 = read_batch(
+	// 	getResFolder() + "/cifar-10-batches-bin/data_batch_4.bin",
+	// 	10000);
+	// vector<data> batch_data5 = read_batch(
+	// 	getResFolder() + "/cifar-10-batches-bin/data_batch_5.bin",
+	// 	10000);
 
 	vector<data> train_data;
 	train_data.insert(train_data.end(), batch_data1.begin(), batch_data1.end());
@@ -90,7 +104,9 @@ void approcheDesBoss() {
 	p.toFile();
 	cout << "\nTest..." << endl;
 
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = read_batch(
+		getResFolder() + "/cifar-10-batches-bin/test_batch.bin",
+		1000);
 
 	vector<data> splittedTestImg = split(data_test, nbPatch);
 	vector<data> featuresData = gatherDataFeatures(k, splittedTestImg, N, nbPatch);
@@ -101,7 +117,9 @@ void testReadFile() {
 	int nbPatch = 16;
 	int N = 1024;
 	cout << "Loading data..." << endl;
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 10000);
+	vector<data> data_test = read_batch(
+		getResFolder() + "/cifar-10-batches-bin/test_batch.bin",
+		10000);
 
 	cout << "Read K-Means..." << endl;
 	K_Means_2 k(getResFolder() + "/16_1024_50000/K_Means_2_1024_192.txt");
@@ -129,9 +147,13 @@ void printKMeansCenters() {
 
 void test() {
 	cout << "Loading Data..." <<endl;
-	vector<data> trainData = read_batch(getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin", 1000);
+	vector<data> trainData = read_batch(
+		getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin",
+		1000);
 
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = read_batch(
+		getResFolder() + "/cifar-10-batches-bin/test_batch.bin",
+		1000);
 
 	float min = 0.;
 	float max = 0.;
@@ -190,7 +212,9 @@ void mnist() {
 }
 
 void printImages() {
-	vector<data> data_test = read_batch(getResFolder() + "/cifar-10-batches-bin/test_batch.bin", 1000);
+	vector<data> data_test = read_batch(
+		getResFolder() + "/cifar-10-batches-bin/test_batch.bin",
+		1000);
 	for (int i = 0; i < 20; i++) {
 		if (data_test[i].label == 3) {
 			char name[50];
