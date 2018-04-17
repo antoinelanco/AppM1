@@ -116,55 +116,17 @@ void approcheDesBoss() {
 
 void testReadFile() {
 	int nbPatch = 16;
-	int N = 1024;
+	int N = 2048;
 	cout << "Loading test data..." << endl;
 	vector<data> data_test = read_batch(
 		getResFolder() + "/cifar-10-batches-bin/test_batch.bin",
 		10000);
 
 	cout << "Read K-Means..." << endl;
-	K_Means_2 k(getResFolder() + "/16_1024_50000/K_Means_2_1024_192.txt");
+	K_Means_2 k("/home/samuel/Documents/Cours/M1/S2/Intro_App/Projet/AppM1/saved_models/16_2048_50000_vec/K_Means_2_2048_192.txt");
 
-	// cout << "Read Perceptron..." << endl;
-	// Perceptron p(getResFolder() + "/16_1024_50000/Perceptron_10_16384.txt");
-	cout << "Loading train data..." << endl;
-	vector<data> batch_data1 = read_batch(
-		getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin",
-		10000);
-	vector<data> batch_data2 = read_batch(
-		getResFolder() + "/cifar-10-batches-bin/data_batch_2.bin",
-		10000);
-	vector<data> batch_data3 = read_batch(
-		getResFolder() + "/cifar-10-batches-bin/data_batch_3.bin",
-		10000);
-	vector<data> batch_data4 = read_batch(
-		getResFolder() + "/cifar-10-batches-bin/data_batch_4.bin",
-		10000);
-	vector<data> batch_data5 = read_batch(
-		getResFolder() + "/cifar-10-batches-bin/data_batch_5.bin",
-		10000);
-
-	vector<data> train_data;
-	train_data.insert(train_data.end(), batch_data1.begin(), batch_data1.end());
-	train_data.insert(train_data.end(), batch_data2.begin(), batch_data2.end());
-	train_data.insert(train_data.end(), batch_data3.begin(), batch_data3.end());
-	train_data.insert(train_data.end(), batch_data4.begin(), batch_data4.end());
-	train_data.insert(train_data.end(), batch_data5.begin(), batch_data5.end());
-
-	cout << "Split train data..." << endl;
-	vector<data> splittedData = split(train_data, nbPatch);
-
-	cout << "Gather train data..." << endl;
-	vector<data> newData = gatherDataFeaturesVec(k, splittedData, N, nbPatch);
-
-	cout << "Learn Perceptron..." << endl;
-	Perceptron p(N * nbPatch, 10, 0.01);
-	int nbEpoch = 20;
-	for (int i = 0; i < nbEpoch; i++) {
-		cout << '\r' << 100 * (int) (i + 1.) / nbEpoch << "%" << flush;
-		p.update(newData);
-	}
-	p.toFile();
+	cout << "Read Perceptron..." << endl;
+	Perceptron p("/home/samuel/Documents/Cours/M1/S2/Intro_App/Projet/AppM1/saved_models/16_2048_50000_vec/Perceptron_10_32768.txt");
 
 	cout << "Split test images..." << endl;
 	vector<data> splittedTestImg = split(data_test, nbPatch);
@@ -174,7 +136,7 @@ void testReadFile() {
 
 	cout << "Test..." << endl;
 	cout << "Score : " << p.score(featuresData) << endl;
-	p.scoreFile(featuresData);
+	//p.scoreFile(featuresData);
 }
 
 void printKMeansCenters() {
