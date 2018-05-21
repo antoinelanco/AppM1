@@ -188,8 +188,15 @@ int K_Means_2::predict(data d) {
 
 vector<float> K_Means_2::predictVec(data d) {
   vector<float> res;
+  float moy = 0.f;
   for (int k = 0; k < this->nbCenters; k++) {
-    res.push_back(1.f/distance(this->centers[k], d.features));
+    float zk = distance(d.features, this->centers[k]);
+    res.push_back(zk);
+    moy += zk;
+  }
+  moy /= this->nbCenters;
+  for (int k = 0; k < this->nbCenters; k++) {
+    res[k] = max(0.f, moy - res[k]);
   }
   return res;
 }

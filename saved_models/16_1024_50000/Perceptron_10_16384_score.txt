@@ -1,0 +1,12 @@
+10 16384
+Class 0: Mauvaise rep -> 61 Bonne rep -> 42 Toto -> 103
+Class 1: Mauvaise rep -> 51 Bonne rep -> 38 Toto -> 89
+Class 2: Mauvaise rep -> 62 Bonne rep -> 38 Toto -> 100
+Class 3: Mauvaise rep -> 80 Bonne rep -> 23 Toto -> 103
+Class 4: Mauvaise rep -> 60 Bonne rep -> 30 Toto -> 90
+Class 5: Mauvaise rep -> 61 Bonne rep -> 25 Toto -> 86
+Class 6: Mauvaise rep -> 56 Bonne rep -> 56 Toto -> 112
+Class 7: Mauvaise rep -> 52 Bonne rep -> 50 Toto -> 102
+Class 8: Mauvaise rep -> 49 Bonne rep -> 57 Toto -> 106
+Class 9: Mauvaise rep -> 45 Bonne rep -> 64 Toto -> 109
+Score : 0.577%

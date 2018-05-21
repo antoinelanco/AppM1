@@ -54,7 +54,7 @@ void approcheDesBoss() {
 	cout << "Loading Data..." << endl;
 	vector<data> batch_data1 = read_batch(
 		getResFolder() + "/cifar-10-batches-bin/data_batch_1.bin",
-		3000);
+		10000);
 	// vector<data> batch_data2 = read_batch(
 	// 	getResFolder() + "/cifar-10-batches-bin/data_batch_2.bin",
 	// 	10000);
@@ -78,7 +78,7 @@ void approcheDesBoss() {
 	cout << "Split data..." << endl;
 	vector<data> splittedData = split(train_data, nbPatch);
 	//writeSplittedImg(splittedData, nbPatch);
-	int N = 128;
+	int N = 1024;
 	cout << "Learn K-Means..." << endl;
 
 	//pair<vector<data>, K_means> resGather = trainKMeansDataFeatures(splittedData, N, 30, nbPatch);
@@ -106,36 +106,37 @@ void approcheDesBoss() {
 
 	vector<data> data_test = read_batch(
 		getResFolder() + "/cifar-10-batches-bin/test_batch.bin",
-		1000);
-
+		10000);
+	cout << "Split test data..." << endl;
 	vector<data> splittedTestImg = split(data_test, nbPatch);
-	vector<data> featuresData = gatherDataFeatures(k, splittedTestImg, N, nbPatch);
+	cout << "Gather test data..." << endl;
+	vector<data> featuresData = gatherDataFeaturesVec(k, splittedTestImg, N, nbPatch);
 	cout << "Score : " << p.score(featuresData) << endl;
 }
 
 void testReadFile() {
 	int nbPatch = 16;
-	int N = 1024;
-	cout << "Loading data..." << endl;
+	int N = 2048;
+	cout << "Loading test data..." << endl;
 	vector<data> data_test = read_batch(
 		getResFolder() + "/cifar-10-batches-bin/test_batch.bin",
 		10000);
 
 	cout << "Read K-Means..." << endl;
-	K_Means_2 k(getResFolder() + "/16_1024_50000/K_Means_2_1024_192.txt");
+	K_Means_2 k("/home/samuel/Documents/Cours/M1/S2/Intro_App/Projet/AppM1/saved_models/16_2048_50000_vec/K_Means_2_2048_192.txt");
 
 	cout << "Read Perceptron..." << endl;
-	Perceptron p(getResFolder() + "/16_1024_50000/Perceptron_10_16384.txt");
+	Perceptron p("/home/samuel/Documents/Cours/M1/S2/Intro_App/Projet/AppM1/saved_models/16_2048_50000_vec/Perceptron_10_32768.txt");
 
-	cout << "Split images..." << endl;
+	cout << "Split test images..." << endl;
 	vector<data> splittedTestImg = split(data_test, nbPatch);
 
-	cout << "Gather images..." << endl;
-	vector<data> featuresData = gatherDataFeatures(k, splittedTestImg, N, nbPatch);
+	cout << "Gather test images..." << endl;
+	vector<data> featuresData = gatherDataFeaturesVec(k, splittedTestImg, N, nbPatch);
 
 	cout << "Test..." << endl;
 	cout << "Score : " << p.score(featuresData) << endl;
-	p.scoreFile(featuresData);
+	//p.scoreFile(featuresData);
 }
 
 void printKMeansCenters() {
@@ -225,8 +226,8 @@ void printImages() {
 }
 
 int main(int argc, char** argv) {
-	approcheDesBoss();
-	//testReadFile();
+	//approcheDesBoss();
+	testReadFile();
 	//printKMeansCenters();
 	//test();
 	//mnist();
