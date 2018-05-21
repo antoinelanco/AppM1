@@ -194,6 +194,7 @@ vector<float> K_Means_2::predictVec(data d) {
   return res;
 }
 
+//bonjour
 
 
 float K_Means_2::score(vector<data> testData) {
